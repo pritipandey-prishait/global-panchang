@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Global Panchang — Daily Hindu Almanac</title>
 <meta name="description" content="Free daily Panchang in English, Hindi, Tamil, Telugu, Bengali with region-specific calendar data.">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#3D5A80">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Panchang">
+<link rel="apple-touch-icon" href="/icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
@@ -1667,6 +1674,11 @@ window.addEventListener('load',()=>{
   loadSavedRashi();
   showHoroscopeUI();
   if(savedRashi !== null) generateHoroscope(savedRashi);
+
+  // ── PWA: register service worker ──
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  }
 });
 
 // ── CALENDAR FILTERS ──
@@ -1993,6 +2005,68 @@ function renderHoroscope(h, rd, dateStr){
 
 // small helper to avoid template literal issues
 const var_gold_pale = '#FDF3D0';
+
+// ── PWA INSTALL PROMPT ──
+let deferredInstallPrompt = null;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  showInstallBanner();
+});
+
+function showInstallBanner(){
+  if(document.getElementById('install-banner')) return;
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.style.cssText = 'position:sticky;bottom:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,#3D5A80,#5B7FA8);padding:14px 20px;display:flex;align-items:center;gap:14px;box-shadow:0 -4px 20px rgba(61,90,128,.3)';
+  banner.innerHTML = `
+    <span style="font-size:28px">📱</span>
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:700;color:#fff">Install Global Panchang</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.75)">Add to your home screen for quick daily access</div>
+    </div>
+    <button onclick="installApp()" style="padding:10px 20px;border-radius:100px;border:none;background:#fff;color:#3D5A80;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif">Install</button>
+    <button onclick="this.parentElement.remove()" style="padding:8px;border:none;background:transparent;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer">✕</button>
+  `;
+  document.body.appendChild(banner);
+}
+
+async function installApp(){
+  if(!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  const result = await deferredInstallPrompt.userChoice;
+  if(result.outcome === 'accepted'){
+    document.getElementById('install-banner')?.remove();
+  }
+  deferredInstallPrompt = null;
+}
+
+// iOS Safari doesn't support beforeinstallprompt — show manual instructions
+function isIOS(){
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+}
+function isInStandaloneMode(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+}
+if(isIOS() && !isInStandaloneMode()){
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      if(document.getElementById('install-banner')) return;
+      const banner = document.createElement('div');
+      banner.id = 'install-banner';
+      banner.style.cssText = 'position:sticky;bottom:0;left:0;right:0;z-index:200;background:linear-gradient(135deg,#3D5A80,#5B7FA8);padding:14px 20px;display:flex;align-items:center;gap:12px;box-shadow:0 -4px 20px rgba(61,90,128,.3)';
+      banner.innerHTML = `
+        <span style="font-size:26px">📱</span>
+        <div style="flex:1;font-size:13px;color:#fff;line-height:1.5">
+          <b>Install this app:</b> tap <span style="font-size:16px">⎙</span> Share, then <b>"Add to Home Screen"</b>
+        </div>
+        <button onclick="this.parentElement.remove()" style="padding:8px;border:none;background:transparent;color:rgba(255,255,255,.6);font-size:18px;cursor:pointer">✕</button>
+      `;
+      document.body.appendChild(banner);
+    }, 3000);
+  });
+}
 
 // ── EVENT LISTENERS ──
 document.getElementById('dpick').addEventListener('change',()=>{calMonth=null;renderAll();if(savedRashi!==null)generateHoroscope(savedRashi,true);});
