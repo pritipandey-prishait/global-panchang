@@ -1,0 +1,2007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Global Panchang — Daily Hindu Almanac</title>
+<meta name="description" content="Free daily Panchang in English, Hindi, Tamil, Telugu, Bengali with region-specific calendar data.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#F4F7FB;color:#0F172A;font-size:19px;line-height:1.65}
+:root{
+  --blue:#4A6B94;--blue-deep:#3D5A80;--blue-dark:#2E455F;--blue-soft:#DCE6F2;--blue-glow:rgba(61,90,128,.15);
+  --blue-pale:#EEF3F9;--sky:#7C9CC0;
+  --bg:#F4F7FB;--bg2:#EDF2F9;--surface:#FFFFFF;--surface2:#FAFCFF;
+  --border:#DBE4F0;--border-soft:#E8EEF7;
+  --text:#0F172A;--text2:#334155;--muted:#64748B;
+  --shadow:0 2px 16px rgba(61,90,128,.08);--shadow-lg:0 10px 36px rgba(61,90,128,.13);--shadow-card:0 4px 22px rgba(61,90,128,.08);
+  --radius:18px;--radius-sm:12px;--radius-lg:24px;--radius-pill:100px;
+}
+.site-header{background:linear-gradient(135deg,#3D5A80 0%,#4A6B94 50%,#5B7FA8 100%);padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:76px;position:sticky;top:0;z-index:100;box-shadow:0 4px 24px rgba(61,90,128,.25)}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-icon{font-size:34px;filter:drop-shadow(0 2px 4px rgba(0,0,0,.25))}
+.logo-text .name{font-size:26px;font-weight:800;color:#fff;letter-spacing:-.4px;line-height:1.1}
+.logo-text .tagline{font-size:13px;color:rgba(255,255,255,.7);font-weight:400}
+.lang-btns{display:flex;gap:6px}
+.lang-btn{padding:7px 15px;border-radius:var(--radius-pill);font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid rgba(255,255,255,.25);background:rgba(255,255,255,.12);color:rgba(255,255,255,.85);transition:all .2s}
+.lang-btn.active,.lang-btn:hover{background:#fff;color:var(--blue-deep);border-color:#fff;box-shadow:0 3px 12px rgba(0,0,0,.15)}
+.region-badge{padding:5px 14px;border-radius:var(--radius-pill);font-size:13px;font-weight:600;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.controls-bar{background:var(--surface);border-bottom:1px solid var(--border-soft);padding:14px 28px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;box-shadow:0 1px 10px rgba(61,90,128,.05)}
+.controls-bar input,.controls-bar select{font-size:15px;padding:10px 14px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);outline:none;font-family:'Inter',sans-serif;transition:all .2s}
+.controls-bar input:focus,.controls-bar select:focus{border-color:var(--blue);box-shadow:0 0 0 4px var(--blue-glow)}
+#display-date{font-size:14px;color:var(--muted);margin-left:auto;font-weight:500}
+.tabs{display:flex;gap:0;padding:0 28px;background:var(--surface);border-bottom:1.5px solid var(--border-soft);overflow-x:auto}
+.tab{padding:16px 20px;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--blue);background:var(--blue-glow)}
+.tab.active{color:var(--blue);border-bottom-color:var(--blue);background:linear-gradient(to bottom,transparent,var(--blue-glow))}
+.content{max-width:960px;margin:0 auto;padding:28px 22px}
+.pane{display:none}.pane.active{display:block}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-bottom:24px}
+.mini-card{background:var(--surface);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow-card);position:relative;overflow:hidden;transition:transform .2s,box-shadow .2s}
+.mini-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.mini-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--blue),var(--sky))}
+.mini-card .lbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;font-weight:600}
+.mini-card .val{font-size:19px;font-weight:700;color:var(--text);line-height:1.2}
+.mini-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
+.sec{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-card);overflow:hidden;margin-bottom:18px}
+.sec-h{padding:14px 22px;background:linear-gradient(135deg,var(--blue-pale),var(--blue-soft));border-bottom:1px solid var(--border-soft);font-size:13px;font-weight:700;color:var(--blue-deep);text-transform:uppercase;letter-spacing:.08em;display:flex;align-items:center;gap:9px}
+.sec-b{padding:20px 22px}
+.badge{display:inline-block;padding:4px 13px;border-radius:var(--radius-pill);font-size:13px;font-weight:600}
+.ba{background:#ECFDF5;color:#047857}.bi{background:#FEF2F2;color:#B91C1C}.bn{background:#F1F5F9;color:#475569}.bw{background:#FEF9C3;color:#A16207}.binfo{background:#DCE6F2;color:#3D5A80}.bpurple{background:#F3E8FF;color:#7E22CE}.bpink{background:#FCE7F3;color:#BE185D}.bteal{background:#CCFBF1;color:#0F766E}
+.ptbl{width:100%;border-collapse:collapse;font-size:16px}
+.ptbl td{padding:12px 0;border-bottom:1px solid var(--border-soft);color:var(--text2)}
+.ptbl td:first-child{font-weight:600;color:var(--text);width:44%}
+.ptbl tr:last-child td{border-bottom:none}
+.rahu-box{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--radius-sm);background:#FEF2F2;border-left:5px solid #DC2626;margin-bottom:12px;box-shadow:0 2px 10px rgba(220,38,38,.07)}
+.warn-box{padding:12px 16px;border-radius:var(--radius-sm);background:#FEF9C3;border-left:5px solid #EAB308;font-size:15px;color:#A16207;margin-bottom:12px}
+.planet-row{display:flex;flex-wrap:wrap;gap:10px}
+.pchip{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--bg2);border:1px solid var(--border-soft);border-radius:var(--radius-sm);transition:all .2s}
+.pchip:hover{border-color:var(--blue);box-shadow:0 3px 10px var(--blue-glow)}
+.psym{font-size:21px;width:25px;text-align:center}
+.pn{font-size:14px;font-weight:600;color:var(--text)}.pr{font-size:13px;color:var(--muted)}
+.cg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cg-cell{padding:12px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border-soft);text-align:center;background:var(--surface);transition:all .2s}
+.cg-cell:hover{border-color:var(--border);box-shadow:var(--shadow)}
+.cg-cell.now{border-color:var(--blue);background:var(--blue-pale);box-shadow:0 3px 14px var(--blue-glow)}
+.cg-cell .cn{font-size:14px;font-weight:700;color:var(--text)}.cg-cell .ct{font-size:12px;color:var(--muted);margin-top:3px}
+.muhurta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:14px}
+.mcard{padding:17px 19px;border-radius:var(--radius);box-shadow:var(--shadow-card);background:var(--surface);transition:transform .2s}
+.mcard:hover{transform:translateY(-2px)}
+.mcard.good{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);box-shadow:0 4px 18px rgba(4,120,87,.1)}
+.mcard.bad{background:linear-gradient(135deg,#FEF2F2,#FEE2E2);box-shadow:0 4px 18px rgba(185,28,28,.07)}
+.mcard.med{background:linear-gradient(135deg,#FEFCE8,#FEF9C3);box-shadow:0 4px 18px rgba(161,98,7,.08)}
+.mcard .mt{font-size:16px;font-weight:700;margin-bottom:4px;color:var(--text)}.mcard .ms{font-size:14px;color:var(--muted);margin-bottom:12px}
+.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.cal-nav button{padding:9px 22px;font-size:19px;border:1.5px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);cursor:pointer;color:var(--text);font-family:'Inter',sans-serif;transition:all .2s;font-weight:600}
+.cal-nav button:hover{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 3px 12px var(--blue-glow)}
+.cal-nav .ml{flex:1;text-align:center;font-size:21px;font-weight:800;color:var(--text);letter-spacing:-.3px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:12px}
+.cal-head{text-align:center;font-size:13px;font-weight:700;color:var(--muted);padding:7px 0;letter-spacing:.05em;text-transform:uppercase}
+.cal-day{padding:8px 5px;border-radius:var(--radius-sm);text-align:center;min-height:82px;border:1.5px solid transparent;cursor:pointer;transition:all .15s;background:var(--surface)}
+.cal-day:hover{background:var(--bg2);border-color:var(--border)}
+.cal-day.today{border-color:var(--blue);background:linear-gradient(135deg,var(--blue-pale),var(--blue-soft));box-shadow:0 3px 12px var(--blue-glow)}
+.cal-day.other{opacity:.3;background:transparent}
+.cal-day .dn{font-size:17px;font-weight:700;color:var(--text)}.cal-day .dt{font-size:11px;color:var(--muted);line-height:1.4;margin-top:2px}
+.fdot{display:block;font-size:10px;margin-top:3px;padding:2px 5px;border-radius:5px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;line-height:1.5;font-weight:500}
+.fdot-major{background:#FEF9C3;color:#A16207}.fdot-vrat{background:#F3E8FF;color:#7E22CE}.fdot-ekadashi{background:#CCFBF1;color:#0F766E}.fdot-special{background:#FCE7F3;color:#BE185D}
+.fitem{display:flex;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--border-soft)}
+.fitem:last-child{border-bottom:none;padding-bottom:0}
+.nak-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.nak-card{padding:19px;border-radius:var(--radius);box-shadow:var(--shadow-card);background:var(--surface);transition:transform .2s}
+.nak-card:hover{transform:translateY(-1px)}
+.nak-card.hi{background:linear-gradient(135deg,#F0FDF4,#DCFCE7);box-shadow:0 4px 18px rgba(4,120,87,.1)}
+.ashta-wrap{overflow-x:auto}
+.ashta-tbl{width:100%;border-collapse:collapse;font-size:15px;min-width:540px}
+.ashta-tbl th{padding:12px 9px;text-align:center;background:linear-gradient(135deg,var(--blue-pale),var(--blue-soft));border:1px solid var(--border-soft);font-weight:700;font-size:13px;color:var(--blue-deep);text-transform:uppercase;letter-spacing:.05em}
+.ashta-tbl td{padding:11px 9px;text-align:center;border:1px solid var(--border-soft);color:var(--text)}
+.ashta-tbl td:first-child{text-align:left;font-weight:600;color:var(--text2)}
+.ai-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(175px,1fr));gap:14px;margin-top:18px}
+.ai-card{padding:17px 19px;border-radius:var(--radius);box-shadow:var(--shadow-card);background:var(--surface)}
+.today-banner{padding:26px 30px;background:linear-gradient(135deg,#3D5A80 0%,#4A6B94 55%,#5B7FA8 100%);border-radius:var(--radius-lg);margin-bottom:24px;box-shadow:0 10px 32px rgba(61,90,128,.22);position:relative;overflow:hidden}
+.today-banner::before{content:'🕉';position:absolute;right:24px;top:50%;transform:translateY(-50%);font-size:70px;opacity:.08}
+.today-banner .tb-lbl{font-size:14px;color:rgba(255,255,255,.7);text-transform:uppercase;letter-spacing:.1em;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.today-banner .tb-badges{display:flex;flex-wrap:wrap;gap:10px}
+.today-banner .tb-badges .badge{font-size:15px;padding:8px 19px;border-radius:var(--radius-pill);font-weight:600;background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.22)}
+.filter-panel{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-card);padding:22px;margin-bottom:20px}
+.filter-title{font-size:14px;font-weight:700;color:var(--blue);margin-bottom:14px;text-transform:uppercase;letter-spacing:.08em}
+.filter-subtitle{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em}
+.filter-grid{display:flex;flex-wrap:wrap;gap:9px}
+.filter-chip{display:flex;align-items:center;gap:8px;padding:10px 17px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:var(--bg2);cursor:pointer;font-size:15px;font-weight:500;color:var(--muted);transition:all .2s;user-select:none}
+.filter-chip input{display:none}
+.filter-chip.active{border-color:var(--blue);background:var(--blue-pale);color:var(--blue-deep);box-shadow:0 3px 10px var(--blue-glow)}
+.filter-chip:hover{border-color:var(--blue);color:var(--blue-deep)}
+.fchip-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.country-filter-grid{display:flex;flex-wrap:wrap;gap:7px}
+.country-chip{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--radius-pill);border:1.5px solid var(--border);background:var(--bg2);cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:all .2s;user-select:none}
+.country-chip.active{border-color:#047857;background:#ECFDF5;color:#047857;box-shadow:0 2px 10px rgba(4,120,87,.1)}
+.country-chip:hover{border-color:#047857;color:#047857}
+.filter-action-btn{padding:10px 19px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--bg2);color:var(--muted);font-size:15px;font-weight:600;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.filter-action-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 3px 12px var(--blue-glow)}
+.abhijit-box{display:inline-flex;align-items:center;gap:12px;padding:13px 22px;background:linear-gradient(135deg,#ECFDF5,#D1FAE5);border:1.5px solid #6EE7B7;border-radius:var(--radius-sm);font-size:17px;font-weight:700;color:#047857;box-shadow:0 3px 10px rgba(4,120,87,.1)}
+.permission-overlay{position:fixed;inset:0;background:rgba(15,23,42,.65);backdrop-filter:blur(8px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.permission-box{background:var(--surface);border-radius:var(--radius-lg);padding:34px 30px;max-width:460px;width:100%;box-shadow:0 28px 72px rgba(61,90,128,.3)}
+.permission-box h3{font-size:25px;font-weight:800;color:var(--text);margin-bottom:8px;text-align:center;letter-spacing:-.4px}
+.permission-box p{font-size:15px;color:var(--muted);text-align:center;margin-bottom:24px;line-height:1.65}
+.permission-item{display:flex;align-items:flex-start;gap:14px;padding:15px 16px;background:var(--bg2);border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid var(--border-soft)}
+.permission-item .pi-icon{font-size:25px;flex-shrink:0;margin-top:2px}
+.permission-item .pi-text .pi-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:3px}
+.permission-item .pi-text .pi-desc{font-size:14px;color:var(--muted);line-height:1.55}
+.permission-item .pi-toggle{margin-left:auto;flex-shrink:0;padding-top:3px}
+.toggle-switch{position:relative;width:48px;height:27px;cursor:pointer}
+.toggle-switch input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;inset:0;background:var(--border);border-radius:27px;transition:.3s}
+.toggle-slider:before{content:'';position:absolute;width:21px;height:21px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.3s;box-shadow:0 1px 5px rgba(0,0,0,.2)}
+.toggle-switch input:checked+.toggle-slider{background:var(--blue)}
+.toggle-switch input:checked+.toggle-slider:before{transform:translateX(21px)}
+.perm-btn-row{display:flex;gap:12px;margin-top:24px}
+.perm-btn{flex:1;padding:15px;border-radius:var(--radius-sm);font-size:16px;font-weight:700;cursor:pointer;border:none;transition:all .2s;font-family:'Inter',sans-serif}
+.perm-btn-skip{background:var(--bg2);color:var(--muted);border:1.5px solid var(--border)}
+.perm-btn-skip:hover{background:var(--border)}
+.perm-btn-allow{background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;box-shadow:0 5px 18px var(--blue-glow)}
+.perm-btn-allow:hover{box-shadow:0 7px 24px rgba(61,90,128,.3);transform:translateY(-1px)}
+.notif-settings{background:var(--bg2);border-radius:var(--radius-sm);padding:5px 19px;margin-top:16px;border:1px solid var(--border-soft)}
+.notif-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border-soft)}
+.notif-row:last-child{border-bottom:none;padding-bottom:0}
+.notif-row .nr-label{font-size:16px;font-weight:600;color:var(--text)}
+.notif-row .nr-desc{font-size:14px;color:var(--muted);margin-top:3px}
+.location-bar{display:flex;align-items:center;gap:10px;padding:10px 28px;background:linear-gradient(135deg,var(--blue-pale),var(--blue-soft));border-bottom:1px solid var(--blue-soft);font-size:14px;color:var(--blue-deep);font-weight:500}
+.location-bar button{padding:4px 13px;border-radius:var(--radius-pill);border:1.5px solid var(--blue);background:transparent;color:var(--blue);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.location-bar button:hover{background:var(--blue);color:#fff}
+.site-footer{text-align:center;padding:42px 22px;background:linear-gradient(135deg,#2E455F,#3D5A80);margin-top:36px}
+.site-footer .footer-logo{font-size:27px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-.4px}
+.site-footer p{color:rgba(255,255,255,.5);font-size:14px}
+.cal-legend{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px;font-size:13px;color:var(--muted)}
+.cal-legend span{display:flex;align-items:center;gap:5px}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.leg-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}
+.leg-dot{width:11px;height:11px;border-radius:4px}
+/* HOROSCOPE */
+.rashi-selector{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:24px}
+.rashi-btn{display:flex;flex-direction:column;align-items:center;gap:5px;padding:15px 8px;border-radius:var(--radius);border:1.5px solid var(--border);background:var(--surface);cursor:pointer;transition:all .2s;box-shadow:var(--shadow-card)}
+.rashi-btn:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.rashi-btn.selected{border-color:var(--blue);background:var(--blue-pale);box-shadow:0 5px 18px var(--blue-glow)}
+.rashi-btn .rsym{font-size:26px}
+.rashi-btn .rname{font-size:13px;font-weight:600;color:var(--text);text-align:center;line-height:1.2}
+.rashi-btn .reng{font-size:12px;color:var(--muted)}
+.horoscope-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);overflow:hidden;margin-bottom:18px;animation:fadein .4s ease}
+.horoscope-header{padding:28px 30px;background:linear-gradient(135deg,#3D5A80,#5B7FA8);position:relative;overflow:hidden}
+.horoscope-header::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.07)}
+.horoscope-header::after{content:'';position:absolute;bottom:-20px;left:-20px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.05)}
+.horoscope-header .rashi-big{font-size:54px;margin-bottom:5px}
+.horoscope-header .rashi-title{font-size:30px;font-weight:800;color:#fff;letter-spacing:-.5px}
+.horoscope-header .rashi-sub{font-size:15px;color:rgba(255,255,255,.7);margin-top:5px}
+.horoscope-header .rashi-date{font-size:14px;color:rgba(255,255,255,.5);margin-top:3px}
+.horoscope-body{padding:28px 30px}
+.horoscope-text{font-size:18px;line-height:1.9;color:var(--text2);margin-bottom:24px}
+.horoscope-sections{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:24px}
+.hs-card{padding:17px 19px;border-radius:var(--radius);background:var(--bg2);border:1px solid var(--border-soft)}
+.hs-card .hs-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px}
+.hs-card .hs-value{font-size:16px;font-weight:600;color:var(--text)}
+.hs-card .hs-icon{font-size:23px;margin-bottom:7px}
+.horoscope-loading{text-align:center;padding:56px 22px}
+.horoscope-loading .hl-icon{font-size:46px;animation:spin 2s linear infinite;display:inline-block;margin-bottom:18px}
+.horoscope-loading p{font-size:16px;color:var(--muted)}
+.horoscope-error{text-align:center;padding:46px 22px;color:var(--muted)}
+.regen-btn{display:flex;align-items:center;gap:9px;padding:12px 24px;border-radius:var(--radius-pill);border:none;background:linear-gradient(135deg,var(--blue),var(--blue-deep));color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;box-shadow:0 5px 16px var(--blue-glow)}
+.regen-btn:hover{transform:translateY(-1px);box-shadow:0 7px 22px var(--blue-glow)}
+.rashi-saved-bar{display:flex;align-items:center;gap:12px;padding:14px 19px;background:var(--blue-pale);border-radius:var(--radius-sm);border:1px solid var(--blue-soft);margin-bottom:18px;font-size:15px;color:var(--blue-deep)}
+.rashi-saved-bar strong{font-weight:700}
+.rashi-saved-bar button{margin-left:auto;padding:7px 15px;border-radius:var(--radius-pill);border:1.5px solid var(--blue);background:transparent;color:var(--blue);font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.rashi-saved-bar button:hover{background:var(--blue);color:#fff}
+.lucky-row{display:flex;flex-wrap:wrap;gap:9px}
+.lucky-chip{padding:7px 16px;border-radius:var(--radius-pill);background:var(--bg2);border:1px solid var(--border-soft);font-size:15px;font-weight:500;color:var(--text2)}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){
+  body{font-size:17px}
+  .cg-grid{grid-template-columns:repeat(2,1fr)}
+  .content{padding:16px 14px}
+  .logo-text .name{font-size:20px}
+  .lang-btn{padding:5px 10px;font-size:12px}
+  .site-header{padding:0 16px;height:68px}
+  .controls-bar{padding:12px 16px}
+  .tabs{padding:0 16px}
+  .rashi-selector{grid-template-columns:repeat(4,1fr)}
+  .horoscope-sections{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- PERMISSION POPUP -->
+<div class="permission-overlay" id="permission-overlay">
+  <div class="permission-box">
+    <div style="font-size:36px;text-align:center;margin-bottom:10px">🕉</div>
+    <h3>Welcome to Global Panchang</h3>
+    <p>To give you the most accurate Panchang for your location, we'd like to enable the following:</p>
+    <div class="permission-item">
+      <div class="pi-icon">📍</div>
+      <div class="pi-text">
+        <div class="pi-title">Location Access</div>
+        <div class="pi-desc">Auto-detects your country & sets the correct timezone for sunrise, sunset & timings</div>
+      </div>
+      <div class="pi-toggle">
+        <label class="toggle-switch"><input type="checkbox" id="toggle-location" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="permission-item">
+      <div class="pi-icon">🔔</div>
+      <div class="pi-text">
+        <div class="pi-title">Daily Panchang Notification</div>
+        <div class="pi-desc">Get today's Tithi, Nakshatra & auspicious timings every morning</div>
+      </div>
+      <div class="pi-toggle">
+        <label class="toggle-switch"><input type="checkbox" id="toggle-daily" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="permission-item">
+      <div class="pi-icon">🪔</div>
+      <div class="pi-text">
+        <div class="pi-title">Festival & Vrat Reminders</div>
+        <div class="pi-desc">Get reminded 1 day before Ekadashi, Pradosh, Ganesh Chaturthi, Diwali & more</div>
+      </div>
+      <div class="pi-toggle">
+        <label class="toggle-switch"><input type="checkbox" id="toggle-festival" checked><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="permission-item">
+      <div class="pi-icon">⛔</div>
+      <div class="pi-text">
+        <div class="pi-title">Rahu Kaal Alert</div>
+        <div class="pi-desc">Get notified at the start of Rahu Kaal so you can avoid important activities</div>
+      </div>
+      <div class="pi-toggle">
+        <label class="toggle-switch"><input type="checkbox" id="toggle-rahu"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+    <div class="perm-btn-row">
+      <button class="perm-btn perm-btn-skip" onclick="dismissPermission(false)">Skip for now</button>
+      <button class="perm-btn perm-btn-allow" onclick="dismissPermission(true)">Allow & Continue 🙏</button>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATION BAR -->
+<div class="location-bar" id="location-bar" style="display:none">
+  <span>📍</span>
+  <span id="location-text">Detecting your location…</span>
+  <button onclick="document.getElementById('location-bar').style.display='none'">✕</button>
+</div>
+<header class="site-header">
+  <div class="logo">
+    <div class="logo-icon">🕉</div>
+    <div class="logo-text">
+      <div class="name" id="logo-name">Global Panchang</div>
+      <div class="tagline" id="logo-tagline">Daily Hindu Almanac</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <span class="region-badge" id="region-badge">North Indian</span>
+    <div class="lang-btns">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('hi')">हि</button>
+      <button class="lang-btn" onclick="setLang('ta')">த</button>
+      <button class="lang-btn" onclick="setLang('te')">తె</button>
+      <button class="lang-btn" onclick="setLang('bn')">বা</button>
+    </div>
+  </div>
+</header>
+
+<div class="controls-bar">
+  <input type="date" id="dpick">
+  <select id="tzpick">
+    <optgroup label="🌏 South Asia">
+      <option value="Asia/Kolkata">🇮🇳 India (IST)</option>
+      <option value="Asia/Colombo">🇱🇰 Sri Lanka</option>
+      <option value="Asia/Kathmandu">🇳🇵 Nepal</option>
+      <option value="Asia/Dhaka">🇧🇩 Bangladesh</option>
+      <option value="Asia/Karachi">🇵🇰 Pakistan</option>
+      <option value="Asia/Kabul">🇦🇫 Afghanistan</option>
+    </optgroup>
+    <optgroup label="🌏 South East Asia">
+      <option value="Asia/Singapore">🇸🇬 Singapore</option>
+      <option value="Asia/Kuala_Lumpur">🇲🇾 Malaysia</option>
+      <option value="Asia/Bangkok">🇹🇭 Thailand</option>
+      <option value="Asia/Jakarta">🇮🇩 Indonesia</option>
+      <option value="Asia/Manila">🇵🇭 Philippines</option>
+      <option value="Asia/Ho_Chi_Minh">🇻🇳 Vietnam</option>
+      <option value="Asia/Yangon">🇲🇲 Myanmar</option>
+      <option value="Asia/Phnom_Penh">🇰🇭 Cambodia</option>
+    </optgroup>
+    <optgroup label="🌏 East Asia">
+      <option value="Asia/Tokyo">🇯🇵 Japan</option>
+      <option value="Asia/Shanghai">🇨🇳 China</option>
+      <option value="Asia/Seoul">🇰🇷 South Korea</option>
+      <option value="Asia/Hong_Kong">🇭🇰 Hong Kong</option>
+      <option value="Asia/Taipei">🇹🇼 Taiwan</option>
+    </optgroup>
+    <optgroup label="🌏 Middle East & Central Asia">
+      <option value="Asia/Dubai">🇦🇪 UAE (Dubai)</option>
+      <option value="Asia/Riyadh">🇸🇦 Saudi Arabia</option>
+      <option value="Asia/Kuwait">🇰🇼 Kuwait</option>
+      <option value="Asia/Qatar">🇶🇦 Qatar</option>
+      <option value="Asia/Bahrain">🇧🇭 Bahrain</option>
+      <option value="Asia/Muscat">🇴🇲 Oman</option>
+      <option value="Asia/Tehran">🇮🇷 Iran</option>
+      <option value="Asia/Baghdad">🇮🇶 Iraq</option>
+      <option value="Asia/Jerusalem">🇮🇱 Israel</option>
+      <option value="Asia/Beirut">🇱🇧 Lebanon</option>
+      <option value="Asia/Tashkent">🇺🇿 Uzbekistan</option>
+      <option value="Asia/Almaty">🇰🇿 Kazakhstan</option>
+    </optgroup>
+    <optgroup label="🌍 Africa">
+      <option value="Africa/Nairobi">🇰🇪 Kenya</option>
+      <option value="Africa/Lagos">🇳🇬 Nigeria</option>
+      <option value="Africa/Cairo">🇪🇬 Egypt</option>
+      <option value="Africa/Johannesburg">🇿🇦 South Africa</option>
+      <option value="Africa/Addis_Ababa">🇪🇹 Ethiopia</option>
+      <option value="Africa/Dar_es_Salaam">🇹🇿 Tanzania</option>
+      <option value="Africa/Kampala">🇺🇬 Uganda</option>
+      <option value="Africa/Accra">🇬🇭 Ghana</option>
+      <option value="Africa/Casablanca">🇲🇦 Morocco</option>
+    </optgroup>
+    <optgroup label="🌍 Europe">
+      <option value="Europe/London">🇬🇧 United Kingdom</option>
+      <option value="Europe/Dublin">🇮🇪 Ireland</option>
+      <option value="Europe/Lisbon">🇵🇹 Portugal</option>
+      <option value="Europe/Madrid">🇪🇸 Spain</option>
+      <option value="Europe/Paris">🇫🇷 France</option>
+      <option value="Europe/Berlin">🇩🇪 Germany</option>
+      <option value="Europe/Amsterdam">🇳🇱 Netherlands</option>
+      <option value="Europe/Brussels">🇧🇪 Belgium</option>
+      <option value="Europe/Zurich">🇨🇭 Switzerland</option>
+      <option value="Europe/Rome">🇮🇹 Italy</option>
+      <option value="Europe/Stockholm">🇸🇪 Sweden</option>
+      <option value="Europe/Oslo">🇳🇴 Norway</option>
+      <option value="Europe/Copenhagen">🇩🇰 Denmark</option>
+      <option value="Europe/Helsinki">🇫🇮 Finland</option>
+      <option value="Europe/Warsaw">🇵🇱 Poland</option>
+      <option value="Europe/Vienna">🇦🇹 Austria</option>
+      <option value="Europe/Prague">🇨🇿 Czech Republic</option>
+      <option value="Europe/Budapest">🇭🇺 Hungary</option>
+      <option value="Europe/Bucharest">🇷🇴 Romania</option>
+      <option value="Europe/Sofia">🇧🇬 Bulgaria</option>
+      <option value="Europe/Athens">🇬🇷 Greece</option>
+      <option value="Europe/Moscow">🇷🇺 Russia (Moscow)</option>
+      <option value="Europe/Kiev">🇺🇦 Ukraine</option>
+    </optgroup>
+    <optgroup label="🌎 North America">
+      <option value="America/New_York">🇺🇸 US — East (New York)</option>
+      <option value="America/Chicago">🇺🇸 US — Central (Chicago)</option>
+      <option value="America/Denver">🇺🇸 US — Mountain (Denver)</option>
+      <option value="America/Los_Angeles">🇺🇸 US — West (Los Angeles)</option>
+      <option value="America/Anchorage">🇺🇸 US — Alaska</option>
+      <option value="Pacific/Honolulu">🇺🇸 US — Hawaii</option>
+      <option value="America/Toronto">🇨🇦 Canada — Toronto</option>
+      <option value="America/Vancouver">🇨🇦 Canada — Vancouver</option>
+      <option value="America/Edmonton">🇨🇦 Canada — Edmonton</option>
+      <option value="America/Winnipeg">🇨🇦 Canada — Winnipeg</option>
+      <option value="America/Halifax">🇨🇦 Canada — Halifax</option>
+      <option value="America/Mexico_City">🇲🇽 Mexico</option>
+    </optgroup>
+    <optgroup label="🌎 Caribbean & Central America">
+      <option value="America/Jamaica">🇯🇲 Jamaica</option>
+      <option value="America/Trinidad">🇹🇹 Trinidad & Tobago</option>
+      <option value="America/Guyana">🇬🇾 Guyana</option>
+      <option value="America/Barbados">🇧🇧 Barbados</option>
+      <option value="America/Panama">🇵🇦 Panama</option>
+      <option value="America/Costa_Rica">🇨🇷 Costa Rica</option>
+    </optgroup>
+    <optgroup label="🌎 South America">
+      <option value="America/Sao_Paulo">🇧🇷 Brazil (São Paulo)</option>
+      <option value="America/Manaus">🇧🇷 Brazil (Manaus)</option>
+      <option value="America/Argentina/Buenos_Aires">🇦🇷 Argentina</option>
+      <option value="America/Santiago">🇨🇱 Chile</option>
+      <option value="America/Lima">🇵🇪 Peru</option>
+      <option value="America/Bogota">🇨🇴 Colombia</option>
+      <option value="America/Caracas">🇻🇪 Venezuela</option>
+      <option value="America/La_Paz">🇧🇴 Bolivia</option>
+      <option value="America/Montevideo">🇺🇾 Uruguay</option>
+    </optgroup>
+    <optgroup label="🌏 Oceania">
+      <option value="Australia/Sydney">🇦🇺 Australia — Sydney</option>
+      <option value="Australia/Melbourne">🇦🇺 Australia — Melbourne</option>
+      <option value="Australia/Brisbane">🇦🇺 Australia — Brisbane</option>
+      <option value="Australia/Perth">🇦🇺 Australia — Perth</option>
+      <option value="Australia/Adelaide">🇦🇺 Australia — Adelaide</option>
+      <option value="Pacific/Auckland">🇳🇿 New Zealand</option>
+      <option value="Pacific/Fiji">🇫🇯 Fiji</option>
+    </optgroup>
+  </select>
+  <div id="display-date"></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" data-tab="main">📅 <span class="tab-label" data-key="tabPanchang">Panchang</span></div>
+  <div class="tab" data-tab="muhurta">🕐 <span class="tab-label" data-key="tabMuhurta">Muhurta</span></div>
+  <div class="tab" data-tab="festival">✨ <span class="tab-label" data-key="tabFestival">Festivals & Vratas</span></div>
+  <div class="tab" data-tab="nakshatra">⭐ <span class="tab-label" data-key="tabNakshatra">Nakshatra</span></div>
+  <div class="tab" data-tab="ashta">📊 <span class="tab-label" data-key="tabAshta">Ashtakavarga</span></div>
+  <div class="tab" data-tab="horoscope">🔮 Horoscope</div>
+  <div class="tab" data-tab="settings">⚙️ Settings</div>
+</div>
+
+<div class="content">
+  <div id="pane-main" class="pane active">
+    <div id="today-banner"></div>
+    <div class="card-grid" id="p-cards"></div>
+    <div class="sec"><div class="sec-h">📋 <span data-key="details">Details</span></div><div class="sec-b"><table class="ptbl" id="p-tbl"></table></div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+      <div class="sec" style="margin-bottom:0"><div class="sec-h">☀️ <span data-key="sunMoon">Sun & Moon</span></div><div class="sec-b" id="sunmoon"></div></div>
+      <div class="sec" style="margin-bottom:0"><div class="sec-h">⛔ <span data-key="inauspicious">Inauspicious Periods</span></div><div class="sec-b" id="inauspicious"></div></div>
+    </div>
+    <div class="sec"><div class="sec-h">🪐 <span data-key="planets">Planetary Positions</span></div><div class="sec-b"><div class="planet-row" id="planets"></div></div></div>
+    <div class="sec"><div class="sec-h">🕐 <span data-key="choghadiya">Choghadiya</span></div><div class="sec-b"><div class="cg-grid" id="choghadiya"></div></div></div>
+  </div>
+  <div id="pane-muhurta" class="pane">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px" data-key="muhurtaDesc">Auspicious windows for major life activities based on today's Panchang.</p>
+    <div class="muhurta-grid" id="muhurta-grid"></div>
+    <div class="sec" style="margin-top:14px"><div class="sec-h">⭐ <span data-key="abhijit">Abhijit Muhurta</span></div><div class="sec-b" id="abhijit-body"></div></div>
+    <div class="sec"><div class="sec-h">✅ <span data-key="daySummary">Day Summary</span></div><div class="sec-b" id="day-summary"></div></div>
+  </div>
+  <div id="pane-festival" class="pane">
+
+    <!-- FILTER PANEL -->
+    <div class="filter-panel">
+      <div class="filter-title">📅 Show in calendar</div>
+      <div class="filter-grid">
+        <label class="filter-chip active" data-filter="major">
+          <input type="checkbox" checked onchange="toggleFilter('major',this.checked)">
+          <span class="fchip-dot" style="background:#F5C842"></span>
+          <span>Major Festivals</span>
+        </label>
+        <label class="filter-chip active" data-filter="vrat">
+          <input type="checkbox" checked onchange="toggleFilter('vrat',this.checked)">
+          <span class="fchip-dot" style="background:#C49EF5"></span>
+          <span>Vratas & Fasts</span>
+        </label>
+        <label class="filter-chip active" data-filter="ekadashi">
+          <input type="checkbox" checked onchange="toggleFilter('ekadashi',this.checked)">
+          <span class="fchip-dot" style="background:#4ECFB0"></span>
+          <span>Ekadashi</span>
+        </label>
+        <label class="filter-chip active" data-filter="special">
+          <input type="checkbox" checked onchange="toggleFilter('special',this.checked)">
+          <span class="fchip-dot" style="background:#F59EC4"></span>
+          <span>Special Days</span>
+        </label>
+        <label class="filter-chip active" data-filter="national">
+          <input type="checkbox" checked onchange="toggleFilter('national',this.checked)">
+          <span class="fchip-dot" style="background:#6FCF8A"></span>
+          <span>National Holidays</span>
+        </label>
+        <label class="filter-chip active" data-filter="regional">
+          <input type="checkbox" checked onchange="toggleFilter('regional',this.checked)">
+          <span class="fchip-dot" style="background:#F5A742"></span>
+          <span>Regional Festivals</span>
+        </label>
+      </div>
+
+      <!-- COUNTRY FILTER (shown only when national is on) -->
+      <div id="country-filter-wrap" style="margin-top:12px">
+        <div class="filter-subtitle">🌍 National holidays shown for</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+          <span class="badge" style="background:#1a2a1a;color:#6FCF8A;font-size:14px;padding:6px 14px" id="active-country-badge">🌍 Auto-detecting…</span>
+          <span style="font-size:12px;color:var(--muted)">Auto-set from your timezone</span>
+        </div>
+        <div class="filter-subtitle" style="margin-top:10px">➕ Also show holidays from</div>
+        <div class="country-filter-grid" id="country-filter-grid">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- REGION FILTER -->
+      <div style="margin-top:12px">
+        <div class="filter-subtitle">🗺️ Filter regional festivals</div>
+        <div class="filter-grid" id="region-filter-grid">
+          <label class="filter-chip active" data-rfilter="all"><input type="checkbox" checked onchange="toggleRegion('all',this.checked)"><span>All India</span></label>
+          <label class="filter-chip active" data-rfilter="north"><input type="checkbox" checked onchange="toggleRegion('north',this.checked)"><span>North India</span></label>
+          <label class="filter-chip active" data-rfilter="kerala"><input type="checkbox" checked onchange="toggleRegion('kerala',this.checked)"><span>🌺 Kerala</span></label>
+          <label class="filter-chip active" data-rfilter="tamil"><input type="checkbox" checked onchange="toggleRegion('tamil',this.checked)"><span>🌾 Tamil</span></label>
+          <label class="filter-chip active" data-rfilter="telugu"><input type="checkbox" checked onchange="toggleRegion('telugu',this.checked)"><span>🌻 Telugu</span></label>
+          <label class="filter-chip active" data-rfilter="bengali"><input type="checkbox" checked onchange="toggleRegion('bengali',this.checked)"><span>🥁 Bengali</span></label>
+          <label class="filter-chip active" data-rfilter="assamese"><input type="checkbox" checked onchange="toggleRegion('assamese',this.checked)"><span>🌸 Assamese</span></label>
+          <label class="filter-chip active" data-rfilter="punjab"><input type="checkbox" checked onchange="toggleRegion('punjab',this.checked)"><span>🔥 Punjabi</span></label>
+          <label class="filter-chip active" data-rfilter="gujarat"><input type="checkbox" checked onchange="toggleRegion('gujarat',this.checked)"><span>💃 Gujarat</span></label>
+          <label class="filter-chip active" data-rfilter="jain"><input type="checkbox" checked onchange="toggleRegion('jain',this.checked)"><span>🙏 Jain</span></label>
+          <label class="filter-chip active" data-rfilter="buddhist"><input type="checkbox" checked onchange="toggleRegion('buddhist',this.checked)"><span>🧘 Buddhist</span></label>
+          <label class="filter-chip active" data-rfilter="diaspora"><input type="checkbox" checked onchange="toggleRegion('diaspora',this.checked)"><span>🌍 Diaspora</span></label>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <button class="filter-action-btn" onclick="selectAllFilters()">✅ Select All</button>
+        <button class="filter-action-btn" onclick="clearAllFilters()">☐ Clear All</button>
+        <button class="filter-action-btn" onclick="resetFilters()">↺ Reset</button>
+      </div>
+    </div>
+
+    <div class="cal-nav">
+      <button id="prev-month">‹</button>
+      <span class="ml" id="cal-month-lbl"></span>
+      <button id="next-month">›</button>
+    </div>
+    <div class="cal-grid" id="cal-heads"></div>
+    <div class="cal-grid" id="cal-days"></div>
+    <div class="sec" style="margin-top:14px"><div class="sec-h">📋 <span data-key="allEvents">All Events This Month</span></div><div class="sec-b" id="festival-list"></div></div>
+  </div>
+  <div id="pane-nakshatra" class="pane">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px" data-key="nakDesc">All 27 Nakshatras — today's Moon Nakshatra is highlighted in green.</p>
+    <div class="nak-grid" id="nak-grid"></div>
+  </div>
+  <div id="pane-ashta" class="pane">
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px" data-key="ashtaDesc">Benefic points (0–8) per planet per rashi. Higher = stronger results.</p>
+    <div class="sec"><div class="sec-h">📊 <span data-key="ashtaTable">Ashtakavarga Table</span></div><div class="sec-b ashta-wrap"><table class="ashta-tbl" id="ashta-tbl"></table></div></div>
+    <div class="ai-grid" id="ashta-info"></div>
+  </div>
+
+  <div id="pane-horoscope" class="pane">
+
+    <!-- SAVED RASHI BAR (shown when rashi is saved) -->
+    <div id="rashi-saved-bar" class="rashi-saved-bar" style="display:none">
+      <span>🔮 Your moon sign: <strong id="saved-rashi-name">—</strong></span>
+      <button onclick="clearSavedRashi()">Change</button>
+    </div>
+
+    <!-- RASHI SELECTOR (shown when no rashi saved) -->
+    <div id="rashi-selector-wrap">
+      <div class="sec" style="margin-bottom:16px">
+        <div class="sec-h">🌙 Select Your Moon Sign (Chandra Rashi)</div>
+        <div class="sec-b">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">Your moon sign is determined by the position of the Moon at the time of your birth. Select once and we'll show your daily horoscope automatically.</p>
+          <div class="rashi-selector" id="rashi-selector">
+            <div class="rashi-btn" onclick="selectRashi(0)"><span class="rsym">♈</span><span class="rname">Mesh</span><span class="reng">Aries</span></div>
+            <div class="rashi-btn" onclick="selectRashi(1)"><span class="rsym">♉</span><span class="rname">Vrishabh</span><span class="reng">Taurus</span></div>
+            <div class="rashi-btn" onclick="selectRashi(2)"><span class="rsym">♊</span><span class="rname">Mithun</span><span class="reng">Gemini</span></div>
+            <div class="rashi-btn" onclick="selectRashi(3)"><span class="rsym">♋</span><span class="rname">Kark</span><span class="reng">Cancer</span></div>
+            <div class="rashi-btn" onclick="selectRashi(4)"><span class="rsym">♌</span><span class="rname">Simha</span><span class="reng">Leo</span></div>
+            <div class="rashi-btn" onclick="selectRashi(5)"><span class="rsym">♍</span><span class="rname">Kanya</span><span class="reng">Virgo</span></div>
+            <div class="rashi-btn" onclick="selectRashi(6)"><span class="rsym">♎</span><span class="rname">Tula</span><span class="reng">Libra</span></div>
+            <div class="rashi-btn" onclick="selectRashi(7)"><span class="rsym">♏</span><span class="rname">Vrischik</span><span class="reng">Scorpio</span></div>
+            <div class="rashi-btn" onclick="selectRashi(8)"><span class="rsym">♐</span><span class="rname">Dhanu</span><span class="reng">Sagittarius</span></div>
+            <div class="rashi-btn" onclick="selectRashi(9)"><span class="rsym">♑</span><span class="rname">Makar</span><span class="reng">Capricorn</span></div>
+            <div class="rashi-btn" onclick="selectRashi(10)"><span class="rsym">♒</span><span class="rname">Kumbh</span><span class="reng">Aquarius</span></div>
+            <div class="rashi-btn" onclick="selectRashi(11)"><span class="rsym">♓</span><span class="rname">Meen</span><span class="reng">Pisces</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOROSCOPE OUTPUT -->
+    <div id="horoscope-output"></div>
+
+  </div>
+
+  <div id="pane-settings" class="pane">
+    <div class="sec">
+      <div class="sec-h">📍 Location & Timezone</div>
+      <div class="sec-b">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Your current timezone is used to calculate accurate sunrise, sunset, Rahu Kaal and Choghadiya timings.</p>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+          <div id="location-status" style="font-size:13px;color:var(--muted)">📍 Location not detected</div>
+          <button onclick="requestLocation()" style="padding:7px 16px;border-radius:8px;border:1px solid #F5C842;background:transparent;color:#F5C842;font-size:13px;font-weight:600;cursor:pointer">Detect My Location</button>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:6px">Or select manually:</div>
+        <select id="settings-tz" style="width:100%;font-size:13px;padding:9px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)"></select>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">🔔 Notification Preferences</div>
+      <div class="sec-b">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Choose what you'd like to be notified about. Notifications appear in your browser.</p>
+        <div id="notif-permission-status" style="padding:10px 14px;border-radius:8px;background:#3D2C08;border:1px solid #F5C842;font-size:13px;color:#F5C842;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+          <span>🔔</span><span id="notif-status-text">Notification permission not yet granted.</span>
+          <button id="notif-enable-btn" onclick="enableNotifications()" style="margin-left:auto;padding:5px 12px;border-radius:6px;border:none;background:#F5C842;color:#2C2416;font-size:12px;font-weight:700;cursor:pointer">Enable</button>
+        </div>
+        <div class="notif-settings">
+          <div class="notif-row">
+            <div><div class="nr-label">🌅 Daily Panchang (Morning)</div><div class="nr-desc">Today's Tithi, Nakshatra, Yoga & auspicious timings — every morning at 6 AM</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-daily" checked onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="nr-label">🪔 Festival & Vrat Reminders</div><div class="nr-desc">1-day advance notice for Ekadashi, Pradosh, Ganesh Chaturthi, Diwali, Navratri & all major festivals</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-festival" checked onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="nr-label">⛔ Rahu Kaal Alert</div><div class="nr-desc">Notified 5 minutes before Rahu Kaal begins each day</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-rahu" onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="nr-label">🌕 Purnima & Amavasya</div><div class="nr-desc">Reminder on full moon and new moon days</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-moon" checked onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="nr-label">💍 Muhurta Alerts</div><div class="nr-desc">When today is an excellent day for marriage, business, or housewarming</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-muhurta" onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+          <div class="notif-row">
+            <div><div class="nr-label">🕐 Abhijit Muhurta Reminder</div><div class="nr-desc">Notified at the start of today's midday auspicious window</div></div>
+            <label class="toggle-switch"><input type="checkbox" id="ns-abhijit" onchange="saveNotifSettings()"><span class="toggle-slider"></span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-h">🌐 Language & Region</div>
+      <div class="sec-b">
+        <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Select your preferred language. This changes Panchang data, calendar system and festival names.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px">
+          <button onclick="setLang('en')" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-weight:600;cursor:pointer">🇮🇳 English</button>
+          <button onclick="setLang('hi')" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-weight:600;cursor:pointer">🇮🇳 हिन्दी</button>
+          <button onclick="setLang('ta')" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-weight:600;cursor:pointer">🇮🇳 தமிழ்</button>
+          <button onclick="setLang('te')" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-weight:600;cursor:pointer">🇮🇳 తెలుగు</button>
+          <button onclick="setLang('bn')" style="padding:10px 20px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text);font-size:14px;font-weight:600;cursor:pointer">🇧🇩 বাংলা</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px" data-key="ashtaDesc">Benefic points (0–8) per planet per rashi. Higher = stronger results.</p>
+    <div class="sec"><div class="sec-h">📊 <span data-key="ashtaTable">Ashtakavarga Table</span></div><div class="sec-b ashta-wrap"><table class="ashta-tbl" id="ashta-tbl"></table></div></div>
+    <div class="ai-grid" id="ashta-info"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-logo">🕉 Global Panchang</div>
+  <p data-key="footerText">Daily Hindu Almanac · Free forever · Made with ❤️</p>
+  <p style="margin-top:4px;font-size:11px;color:#bbb">English · हिन्दी · தமிழ் · తెలుగు · বাংলা</p>
+</footer>
+
+<script>
+// ══════════════════════════════════════════════
+// REGIONAL CALENDAR DATA
+// ══════════════════════════════════════════════
+const REGIONS = {
+  en: {
+    name:"North Indian", calName:"Vikram Samvat",
+    eraOffset: 57, // year + 57 = Vikram Samvat (approx)
+    calType: "lunar",
+    masaNames:["Chaitra","Vaishakha","Jyeshtha","Ashadha","Shravana","Bhadrapada","Ashwin","Kartika","Margashirsha","Pausha","Magha","Phalguna"],
+    tithiNames:["Pratipada","Dwitiya","Tritiya","Chaturthi","Panchami","Shashthi","Saptami","Ashtami","Navami","Dashami","Ekadashi","Dwadashi","Trayodashi","Chaturdashi","Purnima","Pratipada","Dwitiya","Tritiya","Chaturthi","Panchami","Shashthi","Saptami","Ashtami","Navami","Dashami","Ekadashi","Dwadashi","Trayodashi","Chaturdashi","Amavasya"],
+    pakshaShukla:"Shukla Paksha", pakshaKrishna:"Krishna Paksha",
+    yogaNames:["Vishkambha","Priti","Ayushman","Saubhagya","Shobhana","Atiganda","Sukarma","Dhriti","Shula","Ganda","Vriddhi","Dhruva","Vyaghata","Harshana","Vajra","Siddhi","Vyatipata","Variyana","Parigha","Shiva","Siddha","Sadhya","Shubha","Shukla","Brahma","Indra","Vaidhriti"],
+    varNames:["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    rashiNames:["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"],
+    nakNames:["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"],
+    karanaNames:["Bava","Balava","Kaulava","Taitila","Garija","Vanija","Vishti"],
+    moonPhases:["New Moon","Waxing Crescent","First Quarter","Waxing Gibbous","Full Moon","Waning Gibbous","Last Quarter","Waning Crescent"],
+  },
+  hi: {
+    name:"उत्तर भारतीय", calName:"विक्रम संवत",
+    eraOffset: 57,
+    calType: "lunar",
+    masaNames:["चैत्र","वैशाख","ज्येष्ठ","आषाढ","श्रावण","भाद्रपद","अश्विन","कार्तिक","मार्गशीर्ष","पौष","माघ","फाल्गुन"],
+    tithiNames:["प्रतिपदा","द्वितीया","तृतीया","चतुर्थी","पंचमी","षष्ठी","सप्तमी","अष्टमी","नवमी","दशमी","एकादशी","द्वादशी","त्रयोदशी","चतुर्दशी","पूर्णिमा","प्रतिपदा","द्वितीया","तृतीया","चतुर्थी","पंचमी","षष्ठी","सप्तमी","अष्टमी","नवमी","दशमी","एकादशी","द्वादशी","त्रयोदशी","चतुर्दशी","अमावस्या"],
+    pakshaShukla:"शुक्ल पक्ष", pakshaKrishna:"कृष्ण पक्ष",
+    yogaNames:["विष्कम्भ","प्रीति","आयुष्मान","सौभाग्य","शोभन","अतिगण्ड","सुकर्मा","धृति","शूल","गण्ड","वृद्धि","ध्रुव","व्याघात","हर्षण","वज्र","सिद्धि","व्यतीपात","वरीयान","परिघ","शिव","सिद्ध","साध्य","शुभ","शुक्ल","ब्रह्म","इन्द्र","वैधृति"],
+    varNames:["रविवार","सोमवार","मंगलवार","बुधवार","गुरुवार","शुक्रवार","शनिवार"],
+    rashiNames:["मेष","वृषभ","मिथुन","कर्क","सिंह","कन्या","तुला","वृश्चिक","धनु","मकर","कुम्भ","मीन"],
+    nakNames:["अश्विनी","भरणी","कृत्तिका","रोहिणी","मृगशिरा","आर्द्रा","पुनर्वसु","पुष्य","आश्लेषा","मघा","पूर्व फाल्गुनी","उत्तर फाल्गुनी","हस्त","चित्रा","स्वाती","विशाखा","अनुराधा","ज्येष्ठा","मूल","पूर्व आषाढ़","उत्तर आषाढ़","श्रवण","धनिष्ठा","शतभिषा","पूर्व भाद्रपद","उत्तर भाद्रपद","रेवती"],
+    karanaNames:["बव","बालव","कौलव","तैतिल","गरिज","वणिज","विष्टि"],
+    moonPhases:["अमावस्या","शुक्ल पक्ष","प्रथमा","शुक्ल पक्ष","पूर्णिमा","कृष्ण पक्ष","अर्धचन्द्र","कृष्ण पक्ष"],
+  },
+  ta: {
+    name:"தமிழ் நாட்காட்டி", calName:"கொல்லம் ஆண்டு",
+    eraOffset: -544, // Tamil Kollam era: year - 544
+    calType: "solar",
+    // Tamil solar months (based on sun's entry into rashis)
+    masaNames:["சித்திரை","வைகாசி","ஆனி","ஆடி","ஆவணி","புரட்டாசி","ஐப்பசி","கார்த்திகை","மார்கழி","தை","மாசி","பங்குனி"],
+    tithiNames:["பிரதமை","துவிதியை","திருதியை","சதுர்த்தி","பஞ்சமி","சஷ்டி","சப்தமி","அஷ்டமி","நவமி","தசமி","ஏகாதசி","துவாதசி","த்ரயோதசி","சதுர்தசி","பௌர்ணமி","பிரதமை","துவிதியை","திருதியை","சதுர்த்தி","பஞ்சமி","சஷ்டி","சப்தமி","அஷ்டமி","நவமி","தசமி","ஏகாதசி","துவாதசி","த்ரயோதசி","சதுர்தசி","அமாவாசை"],
+    pakshaShukla:"வளர்பிறை", pakshaKrishna:"தேய்பிறை",
+    yogaNames:["விஷ்கம்பம்","பிரீதி","ஆயுஷ்மான்","சௌபாக்யம்","சோபனம்","அதிகண்டம்","சுகர்மா","திருதி","சூலம்","கண்டம்","விருத்தி","துருவம்","வியாகாதம்","அர்ஷணம்","வஜ்ரம்","சித்தி","வியதீபாதம்","வரீயான்","பரிகம்","சிவம்","சித்தம்","சாத்யம்","சுபம்","சுக்லம்","பிரம்மம்","இந்திரம்","வைத்ருதி"],
+    varNames:["ஞாயிறு","திங்கள்","செவ்வாய்","புதன்","வியாழன்","வெள்ளி","சனி"],
+    rashiNames:["மேஷம்","ரிஷபம்","மிதுனம்","கடகம்","சிம்மம்","கன்னி","துலாம்","விருச்சிகம்","தனுசு","மகரம்","கும்பம்","மீனம்"],
+    nakNames:["அஸ்வினி","பரணி","கிருத்திகை","ரோஹிணி","மிருகசீரிஷம்","திருவாதிரை","புனர்பூசம்","பூசம்","ஆயில்யம்","மகம்","பூரம்","உத்திரம்","அஸ்தம்","சித்திரை","சுவாதி","விசாகம்","அனுஷம்","கேட்டை","மூலம்","பூராடம்","உத்திராடம்","திருவோணம்","அவிட்டம்","சதயம்","பூரட்டாதி","உத்திரட்டாதி","ரேவதி"],
+    karanaNames:["பவம்","பாலவம்","கௌலவம்","தைதிலம்","கரஜம்","வணிஜம்","விஷ்டி"],
+    moonPhases:["அமாவாசை","வளர்பிறை","அரை நிலா","வளர்பிறை","பௌர்ணமி","தேய்பிறை","அரை நிலா","தேய்பிறை"],
+    // Tamil special festivals
+    extraFestivals:[
+      {masa:"சித்திரை",tithi:1,paksha:"S",name:"தமிழ் புத்தாண்டு",type:"major",desc:"Tamil New Year — Chithirai 1"},
+      {masa:"தை",tithi:1,paksha:"S",name:"பொங்கல் / தை திருநாள்",type:"major",desc:"Thai Pongal — harvest festival"},
+      {masa:"மாசி",tithi:1,paksha:"S",name:"மாசி மகம்",type:"major",desc:"Maasi Magam — holy dip in sea"},
+      {masa:"ஆனி",tithi:1,paksha:"S",name:"ஆனி திருமஞ்சனம்",type:"major",desc:"Aani Thirumanjanam"},
+      {masa:"கார்த்திகை",tithi:15,paksha:"S",name:"கார்த்திகை தீபம்",type:"major",desc:"Karthigai Deepam — festival of lights"},
+      {masa:"மார்கழி",tithi:1,paksha:"S",name:"மார்கழி திருவாதிரை",type:"major",desc:"Margazhi Thiruvathirai"},
+    ]
+  },
+  te: {
+    name:"ఆంధ్ర పంచాంగం", calName:"శాలివాహన శక",
+    eraOffset: -78, // Shalivahana Saka: year - 78
+    calType: "lunar",
+    masaNames:["చైత్రం","వైశాఖం","జ్యేష్ఠం","ఆషాఢం","శ్రావణం","భాద్రపదం","ఆశ్వయుజం","కార్తీకం","మార్గశిరం","పుష్యం","మాఘం","ఫాల్గుణం"],
+    tithiNames:["పాడ్యమి","విదియ","తదియ","చవితి","పంచమి","షష్ఠి","సప్తమి","అష్టమి","నవమి","దశమి","ఏకాదశి","ద్వాదశి","త్రయోదశి","చతుర్దశి","పౌర్ణమి","పాడ్యమి","విదియ","తదియ","చవితి","పంచమి","షష్ఠి","సప్తమి","అష్టమి","నవమి","దశమి","ఏకాదశి","ద్వాదశి","త్రయోదశి","చతుర్దశి","అమావాస్య"],
+    pakshaShukla:"శుక్ల పక్షం", pakshaKrishna:"కృష్ణ పక్షం",
+    yogaNames:["విష్కంభం","ప్రీతి","ఆయుష్మాన్","సౌభాగ్యం","శోభనం","అతిగండం","సుకర్మ","ధృతి","శూలం","గండం","వృద్ధి","ధ్రువం","వ్యాఘాతం","హర్షణం","వజ్రం","సిద్ధి","వ్యతీపాతం","వరీయాన్","పరిఘం","శివం","సిద్ధం","సాధ్యం","శుభం","శుక్లం","బ్రహ్మ","ఇంద్రం","వైధృతి"],
+    varNames:["ఆదివారం","సోమవారం","మంగళవారం","బుధవారం","గురువారం","శుక్రవారం","శనివారం"],
+    rashiNames:["మేషం","వృషభం","మిథునం","కర్కాటకం","సింహం","కన్య","తుల","వృశ్చికం","ధనుస్సు","మకరం","కుంభం","మీనం"],
+    nakNames:["అశ్వని","భరణి","కృత్తిక","రోహిణి","మృగశిర","ఆర్ద్ర","పునర్వసు","పుష్యమి","ఆశ్లేష","మఖ","పూర్వ ఫల్గుణి","ఉత్తర ఫల్గుణి","హస్త","చిత్త","స్వాతి","విశాఖ","అనూరాధ","జ్యేష్ఠ","మూల","పూర్వాషాఢ","ఉత్తరాషాఢ","శ్రవణం","ధనిష్ఠ","శతభిష","పూర్వభాద్ర","ఉత్తరభాద్ర","రేవతి"],
+    karanaNames:["బవ","బాలవ","కౌలవ","తైతిల","గరిజ","వణిజ","విష్టి"],
+    moonPhases:["అమావాస్య","వృద్ధి చంద్రుడు","అర్ధ చంద్రుడు","వృద్ధి చంద్రుడు","పౌర్ణమి","క్షీణ చంద్రుడు","అర్ధ చంద్రుడు","క్షీణ చంద్రుడు"],
+    extraFestivals:[
+      {masa:"చైత్రం",tithi:1,paksha:"S",name:"ఉగాది",type:"major",desc:"Telugu New Year — Ugadi"},
+      {masa:"ఆశ్వయుజం",tithi:1,paksha:"S",name:"నవరాత్రులు",type:"major",desc:"Navratri — nine nights of Devi"},
+      {masa:"కార్తీకం",tithi:30,paksha:"K",name:"దీపావళి",type:"major",desc:"Deepavali — festival of lights"},
+      {masa:"శ్రావణం",tithi:15,paksha:"S",name:"వరలక్ష్మి వ్రతం",type:"vrat",desc:"Varalakshmi Vratam — worship of Goddess Lakshmi"},
+      {masa:"భాద్రపదం",tithi:4,paksha:"S",name:"వినాయక చవితి",type:"major",desc:"Vinayaka Chavithi — Lord Ganesha"},
+      {masa:"మార్గశిరం",tithi:11,paksha:"S",name:"వైకుంఠ ఏకాదశి",type:"ekadashi",desc:"Vaikunta Ekadashi — gates of heaven open"},
+    ]
+  },
+  bn: {
+    name:"বাংলা পঞ্জিকা", calName:"বঙ্গাব্দ",
+    eraOffset: -593, // Bangabda: year - 593 (approx)
+    calType: "solar",
+    // Bengali solar months
+    masaNames:["বৈশাখ","জ্যৈষ্ঠ","আষাঢ়","শ্রাবণ","ভাদ্র","আশ্বিন","কার্তিক","অগ্রহায়ণ","পৌষ","মাঘ","ফাল্গুন","চৈত্র"],
+    tithiNames:["প্রতিপদ","দ্বিতীয়া","তৃতীয়া","চতুর্থী","পঞ্চমী","ষষ্ঠী","সপ্তমী","অষ্টমী","নবমী","দশমী","একাদশী","দ্বাদশী","ত্রয়োদশী","চতুর্দশী","পূর্ণিমা","প্রতিপদ","দ্বিতীয়া","তৃতীয়া","চতুর্থী","পঞ্চমী","ষষ্ঠী","সপ্তমী","অষ্টমী","নবমী","দশমী","একাদশী","দ্বাদশী","ত্রয়োদশী","চতুর্দশী","অমাবস্যা"],
+    pakshaShukla:"শুক্লপক্ষ", pakshaKrishna:"কৃষ্ণপক্ষ",
+    yogaNames:["বিষ্কম্ভ","প্রীতি","আয়ুষ্মান","সৌভাগ্য","শোভন","অতিগণ্ড","সুকর্মা","ধৃতি","শূল","গণ্ড","বৃদ্ধি","ধ্রুব","ব্যাঘাত","হর্ষণ","বজ্র","সিদ্ধি","ব্যতীপাত","বরীয়ান","পরিঘ","শিব","সিদ্ধ","সাধ্য","শুভ","শুক্ল","ব্রহ্ম","ইন্দ্র","বৈধৃতি"],
+    varNames:["রবিবার","সোমবার","মঙ্গলবার","বুধবার","বৃহস্পতিবার","শুক্রবার","শনিবার"],
+    rashiNames:["মেষ","বৃষ","মিথুন","কর্কট","সিংহ","কন্যা","তুলা","বৃশ্চিক","ধনু","মকর","কুম্ভ","মীন"],
+    nakNames:["অশ্বিনী","ভরণী","কৃত্তিকা","রোহিণী","মৃগশিরা","আর্দ্রা","পুনর্বসু","পুষ্যা","অশ্লেষা","মঘা","পূর্ব ফাল্গুনী","উত্তর ফাল্গুনী","হস্তা","চিত্রা","স্বাতী","বিশাখা","অনুরাধা","জ্যেষ্ঠা","মূলা","পূর্বাষাঢ়া","উত্তরাষাঢ়া","শ্রবণা","ধনিষ্ঠা","শতভিষা","পূর্বভাদ্রপদ","উত্তরভাদ্রপদ","রেবতী"],
+    karanaNames:["বব","বালব","কৌলব","তৈতিল","গরিজ","বণিজ","বিষ্টি"],
+    moonPhases:["অমাবস্যা","শুক্লপক্ষ","অর্ধচন্দ্র","শুক্লপক্ষ","পূর্ণিমা","কৃষ্ণপক্ষ","অর্ধচন্দ্র","কৃষ্ণপক্ষ"],
+    extraFestivals:[
+      {masa:"বৈশাখ",tithi:1,paksha:"S",name:"পহেলা বৈশাখ",type:"major",desc:"Bengali New Year — Pohela Boishakh"},
+      {masa:"আশ্বিন",tithi:6,paksha:"S",name:"দুর্গা পূজা শুরু",type:"major",desc:"Durga Puja begins — biggest Bengali festival"},
+      {masa:"আশ্বিন",tithi:10,paksha:"S",name:"বিজয়া দশমী",type:"major",desc:"Vijaya Dashami — immersion of Durga"},
+      {masa:"কার্তিক",tithi:30,paksha:"K",name:"কালী পূজা / দীপাবলি",type:"major",desc:"Kali Puja on Diwali night"},
+      {masa:"অগ্রহায়ণ",tithi:1,paksha:"S",name:"নবান্ন",type:"major",desc:"Nabanna — new harvest festival"},
+      {masa:"পৌষ",tithi:1,paksha:"S",name:"পৌষ পার্বণ",type:"major",desc:"Poush Parbon — rice cake festival"},
+      {masa:"ফাল্গুন",tithi:15,paksha:"S",name:"দোল যাত্রা / হোলি",type:"major",desc:"Dol Jatra — Bengali Holi"},
+      {masa:"চৈত্র",tithi:30,paksha:"K",name:"চৈত্র সংক্রান্তি",type:"major",desc:"Chaitra Sankranti — end of Bengali year"},
+    ]
+  }
+};
+
+// ══════════════════════════════════════════════
+// UI TRANSLATIONS
+// ══════════════════════════════════════════════
+const UI = {
+  en:{tabPanchang:"Panchang",tabMuhurta:"Muhurta",tabFestival:"Festivals & Vratas",tabNakshatra:"Nakshatra",tabAshta:"Ashtakavarga",details:"Details",sunMoon:"Sun & Moon",inauspicious:"Inauspicious Periods",planets:"Planetary Positions",choghadiya:"Choghadiya",muhurtaDesc:"Auspicious windows for major life activities.",abhijit:"Abhijit Muhurta",daySummary:"Day Summary",majorFestival:"Major festival",vrat:"Vrat / fast",special:"Special day",allEvents:"All Events This Month",nakDesc:"All 27 Nakshatras — today's Moon Nakshatra highlighted.",ashtaDesc:"Benefic points (0–8) per planet per rashi.",ashtaTable:"Ashtakavarga Table",footerText:"Daily Hindu Almanac · Free forever · Made with ❤️",tithi:"Tithi",nakshatra:"Nakshatra",yoga:"Yoga",vara:"Vara",masa:"Month",era:"Era Year",paksha:"Paksha",tithiNature:"Tithi nature",karana:"Karana",yogaNature:"Yoga nature",nakLord:"Nakshatra lord",nakDeity:"Nakshatra deity",sunRashi:"Sun in rashi",moonRashi:"Moon in rashi",moonPhase:"Moon phase",sunrise:"Sunrise",sunset:"Sunset",approxLoc:"Approx. 28.6°N",lunarDay:"Lunar day",rahuKaal:"Rahu Kaal — avoid",gulikKaal:"Gulik Kaal",yamakantam:"Yamakantam",abhijitDesc:"Midday auspicious period.",strongestRashi:"Strongest rashi",weakestRashi:"Weakest rashi",strongestPlanet:"Strongest planet",moonScore:"Moon score",todayObs:"Today's Observances",excellent:"Excellent",good:"Good",moderate:"Moderate",avoid:"Avoid",highlyAusp:"Highly auspicious",generalAusp:"Generally auspicious",mixedDay:"Mixed day",inauspDay:"Inauspicious day",auspicious:"Auspicious",inauspLabel:"Inauspicious",mixed:"Mixed",neutral:"Neutral",ofMuhurtas:"muhurtas auspicious",lord:"Lord",points:"points"},
+  hi:{tabPanchang:"पंचांग",tabMuhurta:"मुहूर्त",tabFestival:"त्योहार और व्रत",tabNakshatra:"नक्षत्र",tabAshta:"अष्टकवर्ग",details:"विवरण",sunMoon:"सूर्य और चंद्र",inauspicious:"अशुभ काल",planets:"ग्रह स्थिति",choghadiya:"चौघड़िया",muhurtaDesc:"आज के पंचांग के आधार पर शुभ मुहूर्त।",abhijit:"अभिजित मुहूर्त",daySummary:"दिन का सारांश",majorFestival:"प्रमुख त्योहार",vrat:"व्रत / उपवास",special:"विशेष दिन",allEvents:"इस माह के सभी कार्यक्रम",nakDesc:"सभी 27 नक्षत्र — आज का चंद्र नक्षत्र हरे में।",ashtaDesc:"शुभ अंक (0–8) प्रत्येक ग्रह के लिए।",ashtaTable:"अष्टकवर्ग तालिका",footerText:"दैनिक हिंदू पंचांग · सदैव निःशुल्क · ❤️",tithi:"तिथि",nakshatra:"नक्षत्र",yoga:"योग",vara:"वार",masa:"मास",era:"संवत वर्ष",paksha:"पक्ष",tithiNature:"तिथि स्वभाव",karana:"करण",yogaNature:"योग स्वभाव",nakLord:"नक्षत्र स्वामी",nakDeity:"नक्षत्र देवता",sunRashi:"सूर्य राशि",moonRashi:"चंद्र राशि",moonPhase:"चंद्र अवस्था",sunrise:"सूर्योदय",sunset:"सूर्यास्त",approxLoc:"अनुमानित 28.6°N",lunarDay:"तिथि क्रमांक",rahuKaal:"राहु काल — वर्जित",gulikKaal:"गुलिक काल",yamakantam:"यमकंटम",abhijitDesc:"मध्याह्न शुभ मुहूर्त।",strongestRashi:"सबल राशि",weakestRashi:"निर्बल राशि",strongestPlanet:"सबल ग्रह",moonScore:"चंद्र अंक",todayObs:"आज के व्रत-त्योहार",excellent:"उत्तम",good:"शुभ",moderate:"सामान्य",avoid:"वर्जित",highlyAusp:"अत्यंत शुभ",generalAusp:"सामान्यतः शुभ",mixedDay:"मिश्रित दिन",inauspDay:"अशुभ दिन",auspicious:"शुभ",inauspLabel:"अशुभ",mixed:"मिश्रित",neutral:"सामान्य",ofMuhurtas:"मुहूर्त शुभ",lord:"स्वामी",points:"अंक"},
+  ta:{tabPanchang:"பஞ்சாங்கம்",tabMuhurta:"முகூர்த்தம்",tabFestival:"திருவிழாக்கள்",tabNakshatra:"நட்சத்திரம்",tabAshta:"அஷ்டகவர்கம்",details:"விவரங்கள்",sunMoon:"சூரியன் & சந்திரன்",inauspicious:"அசுப நேரங்கள்",planets:"கிரக நிலைகள்",choghadiya:"சோகடியா",muhurtaDesc:"இன்றைய பஞ்சாங்கத்தின் படி நல்ல நேரங்கள்.",abhijit:"அபிஜித் முகூர்த்தம்",daySummary:"நாள் சுருக்கம்",majorFestival:"முக்கிய திருவிழா",vrat:"விரதம்",special:"சிறப்பு நாள்",allEvents:"இம்மாத நிகழ்வுகள்",nakDesc:"27 நட்சத்திரங்கள் — இன்றைய நட்சத்திரம் பச்சையில்.",ashtaDesc:"ஒவ்வொரு கிரகத்திற்கும் சுப புள்ளிகள் (0–8).",ashtaTable:"அஷ்டகவர்க அட்டவணை",footerText:"தினசரி இந்து பஞ்சாங்கம் · இலவசம் · ❤️",tithi:"திதி",nakshatra:"நட்சத்திரம்",yoga:"யோகம்",vara:"கிழமை",masa:"மாதம்",era:"ஆண்டு",paksha:"பக்ஷம்",tithiNature:"திதி தன்மை",karana:"கரணம்",yogaNature:"யோக தன்மை",nakLord:"நட்சத்திர அதிபதி",nakDeity:"நட்சத்திர தெய்வம்",sunRashi:"சூரியன் ராசி",moonRashi:"சந்திரன் ராசி",moonPhase:"சந்திர கட்டம்",sunrise:"சூர்யோதயம்",sunset:"சூர்யாஸ்தமனம்",approxLoc:"28.6°N தோராயம்",lunarDay:"திதி எண்",rahuKaal:"ராகு காலம் — தவிர்க்கவும்",gulikKaal:"குளிக காலம்",yamakantam:"யமகண்டம்",abhijitDesc:"நடுப்பகல் சுப நேரம்.",strongestRashi:"வலிமையான ராசி",weakestRashi:"பலவீனமான ராசி",strongestPlanet:"வலிமையான கிரகம்",moonScore:"சந்திர மதிப்பெண்",todayObs:"இன்றைய விரதங்கள்",excellent:"மிகவும் சுபம்",good:"சுபம்",moderate:"சாதாரணம்",avoid:"தவிர்க்கவும்",highlyAusp:"மிகவும் சுபகரம்",generalAusp:"சாதாரண சுபம்",mixedDay:"கலப்பு நாள்",inauspDay:"அசுப நாள்",auspicious:"சுபம்",inauspLabel:"அசுபம்",mixed:"கலப்பு",neutral:"சாதாரணம்",ofMuhurtas:"முகூர்த்தங்கள் சுபம்",lord:"அதிபதி",points:"புள்ளிகள்"},
+  te:{tabPanchang:"పంచాంగం",tabMuhurta:"ముహూర్తం",tabFestival:"పండుగలు & వ్రతాలు",tabNakshatra:"నక్షత్రం",tabAshta:"అష్టకవర్గం",details:"వివరాలు",sunMoon:"సూర్యుడు & చంద్రుడు",inauspicious:"అశుభ సమయాలు",planets:"గ్రహ స్థానాలు",choghadiya:"చోఘడియా",muhurtaDesc:"నేటి పంచాంగం ఆధారంగా శుభ ముహూర్తాలు.",abhijit:"అభిజిత్ ముహూర్తం",daySummary:"రోజు సారాంశం",majorFestival:"ప్రధాన పండుగ",vrat:"వ్రతం / ఉపవాసం",special:"ప్రత్యేక రోజు",allEvents:"ఈ నెల కార్యక్రమాలు",nakDesc:"27 నక్షత్రాలు — నేటి నక్షత్రం ఆకుపచ్చలో.",ashtaDesc:"ప్రతి గ్రహానికి శుభ పాయింట్లు (0–8).",ashtaTable:"అష్టకవర్గ పట్టిక",footerText:"రోజువారీ హిందూ పంచాంగం · ఉచితం · ❤️",tithi:"తిథి",nakshatra:"నక్షత్రం",yoga:"యోగం",vara:"వారం",masa:"మాసం",era:"శకం సంవత్",paksha:"పక్షం",tithiNature:"తిథి స్వభావం",karana:"కరణం",yogaNature:"యోగ స్వభావం",nakLord:"నక్షత్ర అధిపతి",nakDeity:"నక్షత్ర దేవత",sunRashi:"సూర్యుడు రాశి",moonRashi:"చంద్రుడు రాశి",moonPhase:"చంద్ర దశ",sunrise:"సూర్యోదయం",sunset:"సూర్యాస్తమయం",approxLoc:"28.6°N అంచనా",lunarDay:"తిథి సంఖ్య",rahuKaal:"రాహు కాలం — వద్దు",gulikKaal:"గులిక కాలం",yamakantam:"యమకంటం",abhijitDesc:"మధ్యాహ్న శుభ ముహూర్తం.",strongestRashi:"బలమైన రాశి",weakestRashi:"బలహీన రాశి",strongestPlanet:"బలమైన గ్రహం",moonScore:"చంద్ర స్కోర్",todayObs:"నేటి వ్రతాలు & పండుగలు",excellent:"ఉత్తమం",good:"శుభం",moderate:"సాధారణం",avoid:"నివారించండి",highlyAusp:"అత్యంత శుభం",generalAusp:"సాధారణంగా శుభం",mixedDay:"మిశ్రమ రోజు",inauspDay:"అశుభ రోజు",auspicious:"శుభం",inauspLabel:"అశుభం",mixed:"మిశ్రమం",neutral:"సాధారణం",ofMuhurtas:"ముహూర్తాలు శుభం",lord:"అధిపతి",points:"పాయింట్లు"},
+  bn:{tabPanchang:"পঞ্চাঙ্গ",tabMuhurta:"মুহূর্ত",tabFestival:"উৎসব ও ব্রত",tabNakshatra:"নক্ষত্র",tabAshta:"অষ্টকবর্গ",details:"বিবরণ",sunMoon:"সূর্য ও চন্দ্র",inauspicious:"অশুভ সময়",planets:"গ্রহের অবস্থান",choghadiya:"চোঘড়িয়া",muhurtaDesc:"আজকের পঞ্চাঙ্গ অনুযায়ী শুভ সময়।",abhijit:"অভিজিৎ মুহূর্ত",daySummary:"দিনের সারসংক্ষেপ",majorFestival:"প্রধান উৎসব",vrat:"ব্রত / উপবাস",special:"বিশেষ দিন",allEvents:"এই মাসের সমস্ত অনুষ্ঠান",nakDesc:"সব ২৭ নক্ষত্র — আজকেরটি সবুজে।",ashtaDesc:"প্রতিটি গ্রহে শুভ পয়েন্ট (০–৮)।",ashtaTable:"অষ্টকবর্গ সারণী",footerText:"দৈনিক হিন্দু পঞ্চাঙ্গ · বিনামূল্যে · ❤️",tithi:"তিথি",nakshatra:"নক্ষত্র",yoga:"যোগ",vara:"বার",masa:"মাস",era:"বঙ্গাব্দ",paksha:"পক্ষ",tithiNature:"তিথির স্বভাব",karana:"করণ",yogaNature:"যোগের স্বভাব",nakLord:"নক্ষত্রের অধিপতি",nakDeity:"নক্ষত্রের দেবতা",sunRashi:"সূর্যের রাশি",moonRashi:"চন্দ্রের রাশি",moonPhase:"চন্দ্রের দশা",sunrise:"সূর্যোদয়",sunset:"সূর্যাস্ত",approxLoc:"২৮.৬°N আনুমানিক",lunarDay:"তিথি সংখ্যা",rahuKaal:"রাহু কাল — এড়িয়ে চলুন",gulikKaal:"গুলিক কাল",yamakantam:"যমকণ্টম",abhijitDesc:"মধ্যাহ্ন শুভ মুহূর্ত।",strongestRashi:"সবচেয়ে শক্তিশালী রাশি",weakestRashi:"সবচেয়ে দুর্বল রাশি",strongestPlanet:"সবচেয়ে শক্তিশালী গ্রহ",moonScore:"চন্দ্র স্কোর",todayObs:"আজকের ব্রত ও উৎসব",excellent:"উত্তম",good:"শুভ",moderate:"সাধারণ",avoid:"এড়িয়ে চলুন",highlyAusp:"অত্যন্ত শুভ",generalAusp:"সাধারণত শুভ",mixedDay:"মিশ্র দিন",inauspDay:"অশুভ দিন",auspicious:"শুভ",inauspLabel:"অশুভ",mixed:"মিশ্র",neutral:"সাধারণ",ofMuhurtas:"মুহূর্ত শুভ",lord:"অধিপতি",points:"পয়েন্ট"}
+};
+
+// ══════════════════════════════════════════════
+// COMMON FESTIVALS (all regions)
+// ══════════════════════════════════════════════
+const COMMON_FESTIVALS=[
+  // ── ALL-INDIA MAJOR FESTIVALS ──
+  {masa:"Chaitra",tithi:1,paksha:"S",name:"Ugadi / Gudi Padwa",type:"major",desc:"Hindu New Year — North & South India",region:"all"},
+  {masa:"Chaitra",tithi:9,paksha:"S",name:"Ram Navami",type:"major",desc:"Birth of Lord Rama",region:"all"},
+  {masa:"Chaitra",tithi:15,paksha:"S",name:"Hanuman Jayanti",type:"major",desc:"Birth of Lord Hanuman",region:"all"},
+  {masa:"Vaishakha",tithi:3,paksha:"S",name:"Akshaya Tritiya",type:"major",desc:"Most auspicious day of the year",region:"all"},
+  {masa:"Vaishakha",tithi:15,paksha:"S",name:"Buddha Purnima",type:"major",desc:"Birth, enlightenment & nirvana of Buddha",region:"all"},
+  {masa:"Ashadha",tithi:2,paksha:"S",name:"Rath Yatra",type:"major",desc:"Lord Jagannath's chariot festival — Puri",region:"all"},
+  {masa:"Ashadha",tithi:15,paksha:"S",name:"Guru Purnima",type:"major",desc:"Honour to all spiritual gurus",region:"all"},
+  {masa:"Shravana",tithi:5,paksha:"S",name:"Nag Panchami",type:"major",desc:"Worship of serpent deities",region:"all"},
+  {masa:"Shravana",tithi:15,paksha:"S",name:"Raksha Bandhan",type:"major",desc:"Brother–sister bond festival",region:"all"},
+  {masa:"Bhadrapada",tithi:4,paksha:"S",name:"Ganesh Chaturthi",type:"major",desc:"Birthday of Lord Ganesha — 10-day festival",region:"all"},
+  {masa:"Bhadrapada",tithi:14,paksha:"S",name:"Ganesh Visarjan (Anant Chaturdashi)",type:"major",desc:"Ganesh idol immersion — last day",region:"all"},
+  {masa:"Bhadrapada",tithi:8,paksha:"K",name:"Janmashtami",type:"major",desc:"Birth of Lord Krishna — midnight celebration",region:"all"},
+  {masa:"Ashwin",tithi:1,paksha:"S",name:"Navratri begins",type:"major",desc:"Nine nights of Goddess Durga",region:"all"},
+  {masa:"Ashwin",tithi:7,paksha:"S",name:"Maha Saptami",type:"major",desc:"Seventh day of Navratri — Durga Saptami",region:"all"},
+  {masa:"Ashwin",tithi:8,paksha:"S",name:"Maha Ashtami",type:"major",desc:"Kanya Puja — Durga Ashtami",region:"all"},
+  {masa:"Ashwin",tithi:9,paksha:"S",name:"Maha Navami",type:"major",desc:"Last day of Navratri — Ayudha Puja",region:"all"},
+  {masa:"Ashwin",tithi:10,paksha:"S",name:"Dussehra / Vijayadashami",type:"major",desc:"Victory of good over evil — Ram over Ravana",region:"all"},
+  {masa:"Ashwin",tithi:13,paksha:"K",name:"Karwa Chauth",type:"major",desc:"Wives fast for husband's long life",region:"north"},
+  {masa:"Ashwin",tithi:15,paksha:"S",name:"Sharad Purnima / Kojagiri",type:"major",desc:"Night of Lakshmi's descent — full moon harvest",region:"all"},
+  {masa:"Kartika",tithi:13,paksha:"K",name:"Dhanteras",type:"major",desc:"Worship of Dhanvantari — buy gold & silver",region:"all"},
+  {masa:"Kartika",tithi:14,paksha:"K",name:"Choti Diwali / Narak Chaturdashi",type:"major",desc:"Eve of Diwali — defeat of Narakasura",region:"all"},
+  {masa:"Kartika",tithi:30,paksha:"K",name:"Diwali / Deepavali",type:"major",desc:"Festival of lights — Lakshmi puja",region:"all"},
+  {masa:"Kartika",tithi:1,paksha:"S",name:"Govardhan Puja / Annakut",type:"major",desc:"Lord Krishna lifted Govardhan hill",region:"all"},
+  {masa:"Kartika",tithi:2,paksha:"S",name:"Bhai Dooj",type:"major",desc:"Brother–sister love festival",region:"all"},
+  {masa:"Kartika",tithi:6,paksha:"S",name:"Chhath Puja",type:"major",desc:"Sun god worship — sacred river bathing",region:"north"},
+  {masa:"Kartika",tithi:15,paksha:"S",name:"Dev Diwali / Kartik Purnima",type:"major",desc:"Festival of lights on the Ganges",region:"all"},
+  {masa:"Margashirsha",tithi:11,paksha:"S",name:"Geeta Jayanti",type:"major",desc:"Day Bhagavad Gita was revealed",region:"all"},
+  {masa:"Magha",tithi:5,paksha:"S",name:"Vasant Panchami",type:"major",desc:"Saraswati Puja — onset of spring",region:"all"},
+  {masa:"Magha",tithi:14,paksha:"K",name:"Maha Shivratri",type:"major",desc:"Greatest night of Shiva — all-night vigil",region:"all"},
+  {masa:"Phalguna",tithi:14,paksha:"K",name:"Holika Dahan",type:"major",desc:"Bonfire on eve of Holi",region:"all"},
+  {masa:"Phalguna",tithi:15,paksha:"S",name:"Holi",type:"major",desc:"Festival of colours — arrival of spring",region:"all"},
+
+  // ── KERALA FESTIVALS ──
+  {masa:"Bhadrapada",tithi:11,paksha:"S",name:"Onam (Thiruvonam)",type:"major",desc:"Kerala harvest festival — King Mahabali returns 🌺",region:"kerala"},
+  {masa:"Bhadrapada",tithi:1,paksha:"S",name:"Onam begins (Atham)",type:"special",desc:"10-day Onam season begins in Kerala",region:"kerala"},
+  {masa:"Chaitra",tithi:1,paksha:"S",name:"Vishu",type:"major",desc:"Kerala New Year — Vishukkani auspicious sight 🌻",region:"kerala"},
+  {masa:"Vaishakha",tithi:8,paksha:"S",name:"Thrissur Pooram",type:"major",desc:"Grand elephant festival — Thrissur, Kerala 🐘",region:"kerala"},
+  {masa:"Ashwin",tithi:1,paksha:"S",name:"Navaratri Vilakku (Kerala)",type:"major",desc:"Kerala Navratri — Saraswati Puja & Vidyarambham",region:"kerala"},
+  {masa:"Kartika",tithi:15,paksha:"S",name:"Karthika Vilakku",type:"major",desc:"Kerala lamp festival on Kartika Purnima",region:"kerala"},
+  {masa:"Margashirsha",tithi:1,paksha:"S",name:"Mandala Puja",type:"special",desc:"41-day Sabarimala pilgrimage season begins",region:"kerala"},
+  {masa:"Margashirsha",tithi:14,paksha:"K",name:"Sabarimala Makaravilakku",type:"major",desc:"Sacred star sight at Sabarimala — Makar Jyoti 🌟",region:"kerala"},
+
+  // ── TAMIL FESTIVALS ──
+  {masa:"Magha",tithi:1,paksha:"S",name:"Thai Pongal",type:"major",desc:"Tamil harvest festival — Sun worship 🌾",region:"tamil"},
+  {masa:"Magha",tithi:2,paksha:"S",name:"Mattu Pongal",type:"major",desc:"Cattle thanksgiving — day after Pongal 🐄",region:"tamil"},
+  {masa:"Chaitra",tithi:1,paksha:"S",name:"Tamil New Year (Puthandu)",type:"major",desc:"Tamil New Year — Chithirai 1 🌺",region:"tamil"},
+  {masa:"Ashadha",tithi:15,paksha:"S",name:"Adi Perukku",type:"major",desc:"Water thanksgiving — Tamil rivers festival",region:"tamil"},
+  {masa:"Bhadrapada",tithi:6,paksha:"S",name:"Skanda Sashti",type:"major",desc:"Six-day fast for Lord Murugan",region:"tamil"},
+  {masa:"Kartika",tithi:15,paksha:"S",name:"Karthigai Deepam",type:"major",desc:"Tamil festival of lights 🪔",region:"tamil"},
+  {masa:"Margashirsha",tithi:13,paksha:"K",name:"Thiruvathirai",type:"major",desc:"Lord Shiva birthday — dance festival",region:"tamil"},
+  {masa:"Phalguna",tithi:10,paksha:"S",name:"Thai Pusam",type:"major",desc:"Lord Murugan festival — kavadi procession",region:"tamil"},
+  {masa:"Vaishakha",tithi:6,paksha:"S",name:"Vaikasi Visakam",type:"major",desc:"Lord Murugan's birth star — Visakha in Vaikasi",region:"tamil"},
+
+  // ── BENGALI / ASSAMESE FESTIVALS ──
+  {masa:"Vaishakha",tithi:1,paksha:"S",name:"Pohela Boishakh",type:"major",desc:"Bengali New Year — Nabo Barsho 🎊",region:"bengali"},
+  {masa:"Ashwin",tithi:6,paksha:"S",name:"Durga Puja — Shashthi",type:"major",desc:"Durga Puja begins — biggest Bengali festival 🥁",region:"bengali"},
+  {masa:"Ashwin",tithi:10,paksha:"S",name:"Bijaya Dashami",type:"major",desc:"Durga immersion — sindoor khela 🎉",region:"bengali"},
+  {masa:"Kartika",tithi:30,paksha:"K",name:"Kali Puja / Shyama Puja",type:"major",desc:"Kali worship on Diwali night — Bengal & Assam",region:"bengali"},
+  {masa:"Kartika",tithi:15,paksha:"S",name:"Jagadhatri Puja",type:"major",desc:"Chandannagar's famous Jagadhatri Puja",region:"bengali"},
+  {masa:"Margashirsha",tithi:1,paksha:"S",name:"Nabanna",type:"major",desc:"Bengali new harvest festival 🌾",region:"bengali"},
+  {masa:"Pausha",tithi:1,paksha:"S",name:"Poush Parbon",type:"major",desc:"Rice cake festival — pithe-puli 🎋",region:"bengali"},
+  {masa:"Phalguna",tithi:15,paksha:"S",name:"Dol Jatra / Basanta Utsav",type:"major",desc:"Bengali Holi — Shantiniketan colours 🎨",region:"bengali"},
+  {masa:"Chaitra",tithi:30,paksha:"K",name:"Chaitra Sankranti / Charak Puja",type:"major",desc:"End of Bengali year — Gajan festival",region:"bengali"},
+  // Assamese Bihu
+  {masa:"Chaitra",tithi:1,paksha:"S",name:"Bohag Bihu (Rongali Bihu)",type:"major",desc:"Assamese New Year — spring harvest festival 🌸",region:"assamese"},
+  {masa:"Kartika",tithi:1,paksha:"S",name:"Kongali Bihu (Kati Bihu)",type:"major",desc:"Autumn Bihu — lamp lighting festival 🪔",region:"assamese"},
+  {masa:"Magha",tithi:1,paksha:"S",name:"Magh Bihu (Bhogali Bihu)",type:"major",desc:"Winter Bihu — harvest feast & bonfire 🔥",region:"assamese"},
+
+  // ── PUNJABI / NORTH INDIAN FESTIVALS ──
+  {masa:"Magha",tithi:1,paksha:"S",name:"Lohri",type:"major",desc:"Punjab harvest bonfire festival 🔥",region:"punjab"},
+  {masa:"Vaishakha",tithi:1,paksha:"S",name:"Baisakhi / Vaisakhi",type:"major",desc:"Punjabi New Year — harvest & Khalsa Panth founding",region:"punjab"},
+  {masa:"Shravana",tithi:3,paksha:"S",name:"Hariyali Teej",type:"major",desc:"Green Teej — Shiva-Parvati union 💚",region:"north"},
+  {masa:"Bhadrapada",tithi:3,paksha:"S",name:"Hartalika Teej",type:"major",desc:"Golden Teej — girls fast for Lord Shiva",region:"north"},
+  {masa:"Bhadrapada",tithi:3,paksha:"K",name:"Kajari Teej",type:"major",desc:"Monsoon Teej — Madhya Pradesh & UP",region:"north"},
+  {masa:"Ashwin",tithi:13,paksha:"K",name:"Karwa Chauth Vrat",type:"vrat",desc:"Moonrise fast — wives pray for husband's longevity 🌕",region:"north"},
+  {masa:"Margashirsha",tithi:1,paksha:"S",name:"Guru Nanak Jayanti",type:"major",desc:"Birthday of Guru Nanak Dev Ji — Gurpurab 🙏",region:"punjab"},
+  {masa:"Pausha",tithi:10,paksha:"S",name:"Makar Sankranti / Lohri",type:"major",desc:"Sun enters Capricorn — kite flying & tilgul 🪁",region:"north"},
+
+  // ── TELUGU / ANDHRA FESTIVALS ──
+  {masa:"Chaitra",tithi:1,paksha:"S",name:"Ugadi",type:"major",desc:"Telugu & Kannada New Year 🌿",region:"telugu"},
+  {masa:"Magha",tithi:1,paksha:"S",name:"Makar Sankranti",type:"major",desc:"Biggest Telugu festival — harvest & Bhogi bonfire 🎑",region:"telugu"},
+  {masa:"Shravana",tithi:15,paksha:"S",name:"Varalakshmi Vratam",type:"vrat",desc:"Worship of Goddess Lakshmi — Telugu women's vrat 🌸",region:"telugu"},
+  {masa:"Bhadrapada",tithi:4,paksha:"S",name:"Vinayaka Chavithi",type:"major",desc:"Ganesha Chaturthi — biggest in Telangana & AP",region:"telugu"},
+  {masa:"Ashwin",tithi:1,paksha:"S",name:"Bathukamma",type:"major",desc:"Telangana flower festival — nine days of Durga 🌻",region:"telugu"},
+  {masa:"Ashwin",tithi:9,paksha:"S",name:"Saraswati Puja / Ayudha Puja",type:"major",desc:"Worship of tools & learning",region:"telugu"},
+  {masa:"Bhadrapada",tithi:15,paksha:"K",name:"Bonalu",type:"major",desc:"Telangana Goddess festival — Mahankali worship 🥁",region:"telugu"},
+  {masa:"Margashirsha",tithi:11,paksha:"S",name:"Vaikunta Ekadashi",type:"ekadashi",desc:"Gates of Vaikunta open — most sacred Ekadashi in South",region:"telugu"},
+
+  // ── GUJARAT NAVRATRI ──
+  {masa:"Ashwin",tithi:1,paksha:"S",name:"Gujarat Navratri / Garba begins",type:"major",desc:"9 nights of Garba & Dandiya — Gujarat's grandest festival 💃",region:"gujarat"},
+  {masa:"Ashwin",tithi:9,paksha:"S",name:"Gujarat Navratri ends",type:"major",desc:"Last night of Garba — final Aarti",region:"gujarat"},
+  {masa:"Kartika",tithi:11,paksha:"S",name:"Dev Diwali (Labh Pancham)",type:"major",desc:"Gujarati New Year Day 5 — Labh Pancham",region:"gujarat"},
+
+  // ── JAIN FESTIVALS ──
+  {masa:"Bhadrapada",tithi:5,paksha:"S",name:"Paryushana Parva begins (Jain)",type:"special",desc:"Jain festival of forgiveness — 8-day fast & prayers 🙏",region:"jain"},
+  {masa:"Bhadrapada",tithi:14,paksha:"S",name:"Samvatsari (Jain)",type:"special",desc:"Last day of Paryushana — seek forgiveness from all",region:"jain"},
+  {masa:"Chaitra",tithi:13,paksha:"S",name:"Mahavir Jayanti",type:"major",desc:"Birthday of Lord Mahavira — Jain New Year 🙏",region:"jain"},
+  {masa:"Kartika",tithi:30,paksha:"K",name:"Diwali (Jain — Mahavira Nirvana)",type:"major",desc:"Jain Diwali — Lord Mahavira's nirvana day",region:"jain"},
+  {masa:"Kartika",tithi:1,paksha:"S",name:"Jain New Year (Pratipada)",type:"major",desc:"Jain New Year — day after Diwali",region:"jain"},
+  {masa:"Ashadha",tithi:14,paksha:"S",name:"Das Lakshana Parva (Digambara)",type:"special",desc:"10-day Jain festival — virtues celebration",region:"jain"},
+
+  // ── BUDDHIST FESTIVALS ──
+  {masa:"Vaishakha",tithi:15,paksha:"S",name:"Buddha Purnima / Vesak",type:"major",desc:"Triple holy day — birth, enlightenment & parinirvana of Buddha 🧘",region:"buddhist"},
+  {masa:"Ashadha",tithi:15,paksha:"S",name:"Asalha Puja / Dharma Day",type:"special",desc:"Buddha's first sermon at Sarnath — Dhammachakra Pravartana",region:"buddhist"},
+  {masa:"Ashadha",tithi:15,paksha:"S",name:"Vassa begins (Buddhist Lent)",type:"special",desc:"Buddhist Rains Retreat — 3 months of meditation",region:"buddhist"},
+  {masa:"Kartika",tithi:15,paksha:"S",name:"Pavarana / Vassa ends",type:"special",desc:"End of Buddhist Lent — Kathina robe offering",region:"buddhist"},
+  {masa:"Margashirsha",tithi:8,paksha:"K",name:"Bodhi Day",type:"special",desc:"Day Buddha attained enlightenment under the Bodhi tree 🌳",region:"buddhist"},
+  {masa:"Chaitra",tithi:15,paksha:"S",name:"Ambedkar Jayanti",type:"special",desc:"Birthday of Dr. B.R. Ambedkar — Dalit Buddhist celebration",region:"buddhist"},
+
+  // ── DIASPORA / INTERNATIONAL ──
+  {masa:"Kartika",tithi:30,paksha:"K",name:"Diwali (Global celebration)",type:"major",desc:"Celebrated by 1.5 billion Hindus worldwide 🌍",region:"diaspora"},
+  {masa:"Bhadrapada",tithi:4,paksha:"S",name:"Ganesh Chaturthi (Global)",type:"major",desc:"Celebrated in USA, UK, Australia, Mauritius & worldwide",region:"diaspora"},
+  {masa:"Ashwin",tithi:10,paksha:"S",name:"Navratri Garba (Global)",type:"major",desc:"Garba nights celebrated in diaspora communities worldwide 💃",region:"diaspora"},
+  {masa:"Phalguna",tithi:15,paksha:"S",name:"Holi (Global)",type:"major",desc:"Festival of colours celebrated worldwide 🎨",region:"diaspora"},
+  {masa:"Magha",tithi:14,paksha:"K",name:"Maha Shivratri (Global)",type:"major",desc:"All-night Shiva vigil — temple celebrations worldwide",region:"diaspora"},
+
+  // ── MONTHLY VRATAS (every month) ──
+  {tithi:11,paksha:"S",name:"Shukla Ekadashi",type:"ekadashi",desc:"Fast for Lord Vishnu — bright 11th"},
+  {tithi:11,paksha:"K",name:"Krishna Ekadashi",type:"ekadashi",desc:"Fast for Lord Vishnu — dark 11th"},
+  {tithi:13,paksha:"S",name:"Pradosh Vrat (Shukla)",type:"vrat",desc:"Evening Shiva worship — every month"},
+  {tithi:13,paksha:"K",name:"Pradosh Vrat (Krishna)",type:"vrat",desc:"Evening Shiva worship — every month"},
+  {tithi:4,paksha:"K",name:"Sankashti Chaturthi",type:"vrat",desc:"Monthly Ganesha fast — removes all obstacles"},
+  {tithi:4,paksha:"S",name:"Vinayaka Chaturthi",type:"vrat",desc:"Monthly Ganesha puja — bright 4th"},
+  {tithi:15,paksha:"S",name:"Purnima Vrat",type:"vrat",desc:"Full moon fast — Satyanarayan puja"},
+  {tithi:30,paksha:"K",name:"Amavasya",type:"vrat",desc:"New moon — Pitru Tarpan ancestor worship"},
+  {tithi:8,paksha:"K",name:"Kalashtami",type:"vrat",desc:"Bhairava worship — dark 8th every month"},
+  {tithi:8,paksha:"S",name:"Durga Ashtami",type:"vrat",desc:"Goddess Durga worship — bright 8th"},
+
+  // ── NAMED EKADASHIS ──
+  {masa:"Ashadha",tithi:11,paksha:"S",name:"Devshayani Ekadashi",type:"ekadashi",desc:"Vishnu goes to sleep — Chaturmas begins"},
+  {masa:"Shravana",tithi:11,paksha:"S",name:"Putrada Ekadashi",type:"ekadashi",desc:"Blesses couples seeking children"},
+  {masa:"Bhadrapada",tithi:11,paksha:"S",name:"Parivartini Ekadashi",type:"ekadashi",desc:"Vishnu turns over in cosmic sleep"},
+  {masa:"Ashwin",tithi:11,paksha:"K",name:"Indira Ekadashi",type:"ekadashi",desc:"Liberation of ancestors"},
+  {masa:"Ashwin",tithi:11,paksha:"S",name:"Pasankusha Ekadashi",type:"ekadashi",desc:"Removes sins, grants liberation"},
+  {masa:"Kartika",tithi:11,paksha:"K",name:"Rama Ekadashi",type:"ekadashi",desc:"Worship Lord Rama and Vishnu"},
+  {masa:"Kartika",tithi:11,paksha:"S",name:"Devutthana / Prabodhini Ekadashi",type:"ekadashi",desc:"Vishnu wakes — Tulsi Vivah — auspicious season begins"},
+  {masa:"Margashirsha",tithi:11,paksha:"S",name:"Mokshada Ekadashi",type:"ekadashi",desc:"Liberation ekadashi — Geeta Jayanti"},
+  {masa:"Pausha",tithi:11,paksha:"S",name:"Saphala Ekadashi",type:"ekadashi",desc:"Success and fulfilment of wishes"},
+  {masa:"Magha",tithi:11,paksha:"K",name:"Shattila Ekadashi",type:"ekadashi",desc:"Sesame seed offerings for liberation"},
+  {masa:"Magha",tithi:11,paksha:"S",name:"Jaya Ekadashi",type:"ekadashi",desc:"Victory over evil — ghosts liberated"},
+  {masa:"Phalguna",tithi:11,paksha:"K",name:"Vijaya Ekadashi",type:"ekadashi",desc:"Victory over enemies and obstacles"},
+  {masa:"Phalguna",tithi:11,paksha:"S",name:"Amalaki Ekadashi",type:"ekadashi",desc:"Worship of sacred Amla tree"},
+  {masa:"Chaitra",tithi:11,paksha:"K",name:"Papamochani Ekadashi",type:"ekadashi",desc:"Removes all sins"},
+  {masa:"Chaitra",tithi:11,paksha:"S",name:"Kamada Ekadashi",type:"ekadashi",desc:"Fulfils all desires"},
+  {masa:"Vaishakha",tithi:11,paksha:"K",name:"Varuthini Ekadashi",type:"ekadashi",desc:"Protection and well-being"},
+  {masa:"Vaishakha",tithi:11,paksha:"S",name:"Mohini Ekadashi",type:"ekadashi",desc:"Vishnu in Mohini form — destroys sins"},
+  {masa:"Jyeshtha",tithi:11,paksha:"K",name:"Apara Ekadashi",type:"ekadashi",desc:"Removes sins of this and past lives"},
+  {masa:"Jyeshtha",tithi:11,paksha:"S",name:"Nirjala Ekadashi",type:"ekadashi",desc:"Strictest Ekadashi — no water allowed all day"},
+
+  // ── SPECIAL VRATAS ──
+  {masa:"Ashwin",tithi:1,paksha:"K",name:"Mahalaya Amavasya / Pitru Paksha ends",type:"special",desc:"Most sacred day for ancestor worship"},
+  {masa:"Jyeshtha",tithi:1,paksha:"K",name:"Vat Savitri Vrat",type:"vrat",desc:"Women fast under banyan tree for husband's life"},
+  {masa:"Shravana",tithi:3,paksha:"S",name:"Hariyali Teej Vrat",type:"vrat",desc:"Women fast for marital bliss — Shiva-Parvati"},
+  {masa:"Bhadrapada",tithi:3,paksha:"S",name:"Hartalika Teej",type:"vrat",desc:"Girls fast for Lord Shiva as husband"},
+  {masa:"Magha",tithi:14,paksha:"K",name:"Maha Shivratri Vrat",type:"vrat",desc:"All-night Shiva vigil fast"},
+  {masa:"Kartika",tithi:13,paksha:"K",name:"Yama Deepam",type:"special",desc:"Lamp for Yama — ward off untimely death"},
+  {masa:"Magha",tithi:3,paksha:"S",name:"Saubhagya Teej",type:"vrat",desc:"For health & prosperity of husband"},
+];
+
+// ══════════════════════════════════════════════
+// NATIONAL HOLIDAYS (fixed Gregorian dates)
+// format: {month:1-12, day:1-31, name, country, flag, type}
+// ══════════════════════════════════════════════
+const NATIONAL_HOLIDAYS=[
+  // 🇮🇳 INDIA
+  {month:1,day:26,name:"Republic Day 🇮🇳",country:"India",flag:"🇮🇳",type:"national",desc:"India became a Republic — 1950"},
+  {month:4,day:14,name:"Ambedkar Jayanti 🇮🇳",country:"India",flag:"🇮🇳",type:"national",desc:"Birthday of Dr. B.R. Ambedkar"},
+  {month:8,day:15,name:"Independence Day 🇮🇳",country:"India",flag:"🇮🇳",type:"national",desc:"India's Independence from British rule — 1947"},
+  {month:10,day:2,name:"Gandhi Jayanti 🇮🇳",country:"India",flag:"🇮🇳",type:"national",desc:"Birthday of Mahatma Gandhi"},
+  {month:11,day:14,name:"Children's Day 🇮🇳",country:"India",flag:"🇮🇳",type:"national",desc:"Birthday of Jawaharlal Nehru — Bal Diwas"},
+
+  // 🇺🇸 USA
+  {month:1,day:1,name:"New Year's Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"Federal holiday — USA"},
+  {month:1,day:15,name:"Martin Luther King Jr. Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"3rd Monday of January — Federal holiday"},
+  {month:2,day:19,name:"Presidents' Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"3rd Monday of February — Washington's Birthday"},
+  {month:5,day:27,name:"Memorial Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"Last Monday of May — honour fallen soldiers"},
+  {month:6,day:19,name:"Juneteenth 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"Emancipation of enslaved Americans — 1865"},
+  {month:7,day:4,name:"Independence Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"US Independence from Britain — 1776 🎆"},
+  {month:9,day:2,name:"Labor Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"1st Monday of September — Federal holiday"},
+  {month:10,day:14,name:"Columbus Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"2nd Monday of October"},
+  {month:11,day:11,name:"Veterans Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"Honour US military veterans"},
+  {month:11,day:28,name:"Thanksgiving Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"4th Thursday of November 🦃"},
+  {month:12,day:25,name:"Christmas Day 🇺🇸",country:"USA",flag:"🇺🇸",type:"national",desc:"Federal holiday — USA"},
+
+  // 🇬🇧 UK
+  {month:1,day:1,name:"New Year's Day 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Bank holiday — United Kingdom"},
+  {month:4,day:18,name:"Good Friday 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Bank holiday — UK"},
+  {month:4,day:21,name:"Easter Monday 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Bank holiday — UK"},
+  {month:5,day:6,name:"Early May Bank Holiday 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"First Monday of May"},
+  {month:5,day:27,name:"Spring Bank Holiday 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Last Monday of May"},
+  {month:8,day:26,name:"Summer Bank Holiday 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Last Monday of August"},
+  {month:12,day:25,name:"Christmas Day 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Bank holiday — UK"},
+  {month:12,day:26,name:"Boxing Day 🇬🇧",country:"UK",flag:"🇬🇧",type:"national",desc:"Bank holiday — UK"},
+
+  // 🇨🇦 CANADA
+  {month:1,day:1,name:"New Year's Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Federal holiday — Canada"},
+  {month:2,day:19,name:"Family Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"3rd Monday of February — most provinces"},
+  {month:5,day:20,name:"Victoria Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Last Monday before May 25"},
+  {month:7,day:1,name:"Canada Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Confederation Day — 1867 🍁"},
+  {month:9,day:2,name:"Labour Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"1st Monday of September"},
+  {month:9,day:30,name:"National Day for Truth & Reconciliation 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Orange Shirt Day — Indigenous peoples"},
+  {month:10,day:14,name:"Thanksgiving Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"2nd Monday of October 🍂"},
+  {month:11,day:11,name:"Remembrance Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Honour fallen soldiers"},
+  {month:12,day:25,name:"Christmas Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Federal holiday — Canada"},
+  {month:12,day:26,name:"Boxing Day 🇨🇦",country:"Canada",flag:"🇨🇦",type:"national",desc:"Federal holiday — Canada"},
+
+  // 🇦🇺 AUSTRALIA
+  {month:1,day:1,name:"New Year's Day 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+  {month:1,day:26,name:"Australia Day 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National Day — 1788 🦘"},
+  {month:4,day:18,name:"Good Friday 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+  {month:4,day:19,name:"Easter Saturday 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+  {month:4,day:21,name:"Easter Monday 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+  {month:4,day:25,name:"ANZAC Day 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"Honour fallen soldiers — Australia & NZ"},
+  {month:12,day:25,name:"Christmas Day 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+  {month:12,day:26,name:"Boxing Day 🇦🇺",country:"Australia",flag:"🇦🇺",type:"national",desc:"National public holiday"},
+
+  // 🇳🇿 NEW ZEALAND
+  {month:1,day:1,name:"New Year's Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Public holiday"},
+  {month:1,day:2,name:"Day after New Year's Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Public holiday"},
+  {month:2,day:6,name:"Waitangi Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Treaty of Waitangi — 1840"},
+  {month:4,day:25,name:"ANZAC Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Honour fallen soldiers"},
+  {month:6,day:3,name:"King's Birthday 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"1st Monday of June"},
+  {month:10,day:28,name:"Labour Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"4th Monday of October"},
+  {month:12,day:25,name:"Christmas Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Public holiday"},
+  {month:12,day:26,name:"Boxing Day 🇳🇿",country:"New Zealand",flag:"🇳🇿",type:"national",desc:"Public holiday"},
+
+  // 🇸🇬 SINGAPORE
+  {month:1,day:1,name:"New Year's Day 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Public holiday"},
+  {month:1,day:29,name:"Chinese New Year 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Lunar New Year — 2 days holiday"},
+  {month:1,day:30,name:"Chinese New Year Day 2 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Second day of Lunar New Year"},
+  {month:4,day:18,name:"Good Friday 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Public holiday"},
+  {month:5,day:1,name:"Labour Day 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"International Workers' Day"},
+  {month:8,day:9,name:"National Day 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Singapore Independence — 1965 🎇"},
+  {month:12,day:25,name:"Christmas Day 🇸🇬",country:"Singapore",flag:"🇸🇬",type:"national",desc:"Public holiday"},
+
+  // 🇲🇾 MALAYSIA
+  {month:1,day:1,name:"New Year's Day 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Federal holiday"},
+  {month:1,day:29,name:"Chinese New Year 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Lunar New Year — 2 days"},
+  {month:2,day:1,name:"Federal Territory Day 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"KL, Putrajaya & Labuan"},
+  {month:5,day:1,name:"Labour Day 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Workers' Day"},
+  {month:6,day:2,name:"Yang di-Pertuan Agong's Birthday 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"King's Birthday — 1st Saturday of June"},
+  {month:8,day:31,name:"National Day (Merdeka) 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Malaysia Independence — 1957 🎉"},
+  {month:9,day:16,name:"Malaysia Day 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Formation of Malaysia — 1963"},
+  {month:12,day:25,name:"Christmas Day 🇲🇾",country:"Malaysia",flag:"🇲🇾",type:"national",desc:"Federal holiday"},
+
+  // 🇿🇦 SOUTH AFRICA
+  {month:1,day:1,name:"New Year's Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Public holiday"},
+  {month:3,day:21,name:"Human Rights Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Sharpeville Massacre commemoration — 1960"},
+  {month:4,day:18,name:"Good Friday 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Public holiday"},
+  {month:4,day:21,name:"Family Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Easter Monday"},
+  {month:4,day:27,name:"Freedom Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"First democratic elections — 1994"},
+  {month:5,day:1,name:"Workers' Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"International Labour Day"},
+  {month:6,day:16,name:"Youth Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Soweto Uprising — 1976"},
+  {month:8,day:9,name:"National Women's Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Women's March to Union Buildings — 1956"},
+  {month:9,day:24,name:"Heritage Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Braai Day — celebrate cultural diversity"},
+  {month:12,day:16,name:"Day of Reconciliation 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"National unity & peace"},
+  {month:12,day:25,name:"Christmas Day 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Public holiday"},
+  {month:12,day:26,name:"Day of Goodwill 🇿🇦",country:"South Africa",flag:"🇿🇦",type:"national",desc:"Boxing Day"},
+
+  // 🇲🇺 MAURITIUS
+  {month:1,day:1,name:"New Year's Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Public holiday"},
+  {month:1,day:2,name:"New Year's Day (Day 2) 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Public holiday"},
+  {month:2,day:1,name:"Abolition of Slavery Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"1835 Abolition commemoration"},
+  {month:3,day:12,name:"National Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Mauritius Independence — 1968 🌺"},
+  {month:5,day:1,name:"Labour Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Workers' Day"},
+  {month:8,day:15,name:"Assumption of Mary 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Catholic public holiday"},
+  {month:11,day:1,name:"All Saints Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Public holiday"},
+  {month:11,day:2,name:"Arrival of Indentured Labourers 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"First Indian indentured labourers — 1834"},
+  {month:12,day:25,name:"Christmas Day 🇲🇺",country:"Mauritius",flag:"🇲🇺",type:"national",desc:"Public holiday"},
+
+  // 🇫🇯 FIJI
+  {month:1,day:1,name:"New Year's Day 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Public holiday"},
+  {month:4,day:18,name:"Good Friday 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Public holiday"},
+  {month:4,day:21,name:"Easter Monday 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Public holiday"},
+  {month:5,day:30,name:"Ratu Sir Lala Sukuna Day 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Last Monday of May"},
+  {month:10,day:10,name:"Fiji Day 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Independence from UK — 1970 🌊"},
+  {month:12,day:25,name:"Christmas Day 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Public holiday"},
+  {month:12,day:26,name:"Boxing Day 🇫🇯",country:"Fiji",flag:"🇫🇯",type:"national",desc:"Public holiday"},
+
+  // 🇹🇹 TRINIDAD & TOBAGO
+  {month:1,day:1,name:"New Year's Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Public holiday"},
+  {month:3,day:30,name:"Spiritual Shouter Baptist Liberation Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Recognition of Shouter Baptist faith — 1996"},
+  {month:4,day:18,name:"Good Friday 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Public holiday"},
+  {month:5,day:30,name:"Indian Arrival Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"First Indian indentured labourers arrived — 1845 🌺"},
+  {month:6,day:19,name:"Labour Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Workers' holiday"},
+  {month:8,day:1,name:"Emancipation Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Abolition of slavery — 1834"},
+  {month:8,day:31,name:"Independence Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Independence from UK — 1962 🎉"},
+  {month:9,day:24,name:"Republic Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Republic status — 1976"},
+  {month:12,day:25,name:"Christmas Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Public holiday"},
+  {month:12,day:26,name:"Boxing Day 🇹🇹",country:"Trinidad & Tobago",flag:"🇹🇹",type:"national",desc:"Public holiday"},
+
+  // 🇬🇾 GUYANA
+  {month:1,day:1,name:"New Year's Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Public holiday"},
+  {month:2,day:23,name:"Republic Day (Mashramani) 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Guyana Republic — 1970 🎊"},
+  {month:5,day:5,name:"Indian Arrival Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"First Indian indentured labourers — 1838 🌺"},
+  {month:5,day:26,name:"Independence Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Independence from UK — 1966"},
+  {month:8,day:1,name:"Emancipation Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Abolition of slavery"},
+  {month:12,day:25,name:"Christmas Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Public holiday"},
+  {month:12,day:26,name:"Boxing Day 🇬🇾",country:"Guyana",flag:"🇬🇾",type:"national",desc:"Public holiday"},
+
+  // 🇸🇷 SURINAME
+  {month:1,day:1,name:"New Year's Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"Public holiday"},
+  {month:3,day:8,name:"Women's Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"International Women's Day"},
+  {month:5,day:1,name:"Labour Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"Workers' Day"},
+  {month:7,day:1,name:"Keti Koti Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"Emancipation Day — abolition of slavery — 1863"},
+  {month:8,day:9,name:"Indigenous People's Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"National Day of Indigenous Peoples"},
+  {month:11,day:25,name:"Independence Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"Suriname Independence from Netherlands — 1975 🎉"},
+  {month:12,day:25,name:"Christmas Day 🇸🇷",country:"Suriname",flag:"🇸🇷",type:"national",desc:"Public holiday"},
+
+  // 🇳🇵 NEPAL
+  {month:1,day:11,name:"Prithvi Jayanti 🇳🇵",country:"Nepal",flag:"🇳🇵",type:"national",desc:"National Unity Day — King Prithvi Narayan Shah"},
+  {month:2,day:19,name:"National Democracy Day 🇳🇵",country:"Nepal",flag:"🇳🇵",type:"national",desc:"Restoration of Democracy — 1951"},
+  {month:4,day:14,name:"Nepali New Year (Baisakh 1) 🇳🇵",country:"Nepal",flag:"🇳🇵",type:"national",desc:"Nepal New Year — Bikram Sambat 🌸"},
+  {month:5,day:29,name:"Republic Day 🇳🇵",country:"Nepal",flag:"🇳🇵",type:"national",desc:"Nepal became a Federal Republic — 2008"},
+  {month:9,day:20,name:"Constitution Day 🇳🇵",country:"Nepal",flag:"🇳🇵",type:"national",desc:"Nepal Constitution promulgated — 2015"},
+
+  // 🇱🇰 SRI LANKA
+  {month:1,day:14,name:"Tamil Thai Pongal Day 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"Tamil harvest festival"},
+  {month:2,day:4,name:"Independence Day 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"Ceylon Independence from Britain — 1948 🌴"},
+  {month:4,day:13,name:"Sinhala & Tamil New Year Eve 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"Day before New Year"},
+  {month:4,day:14,name:"Sinhala & Tamil New Year 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"Traditional New Year 🌺"},
+  {month:5,day:1,name:"May Day 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"International Workers' Day"},
+  {month:12,day:25,name:"Christmas Day 🇱🇰",country:"Sri Lanka",flag:"🇱🇰",type:"national",desc:"Public holiday"},
+
+  // 🇧🇩 BANGLADESH
+  {month:2,day:21,name:"International Mother Language Day 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Language Movement Martyrs' Day — 1952 🌹"},
+  {month:3,day:17,name:"Birthday of Sheikh Mujibur Rahman 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Father of the Nation's birthday"},
+  {month:3,day:26,name:"Independence Day 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Declaration of Independence — 1971 🟢"},
+  {month:4,day:14,name:"Pohela Boishakh 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Bengali New Year 🎊"},
+  {month:8,day:15,name:"National Mourning Day 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Assassination of Sheikh Mujibur Rahman — 1975"},
+  {month:12,day:16,name:"Victory Day 🇧🇩",country:"Bangladesh",flag:"🇧🇩",type:"national",desc:"Liberation from Pakistan — 1971 🕊️"},
+
+  // 🇵🇰 PAKISTAN
+  {month:2,day:5,name:"Kashmir Solidarity Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"Support for Kashmiri people"},
+  {month:3,day:23,name:"Pakistan Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"Lahore Resolution — 1940 ☪️"},
+  {month:5,day:1,name:"Labour Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"International Workers' Day"},
+  {month:8,day:14,name:"Independence Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"Pakistan Independence — 1947 🎆"},
+  {month:11,day:9,name:"Iqbal Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"Birthday of Allama Iqbal — national poet"},
+  {month:12,day:25,name:"Quaid-e-Azam Day 🇵🇰",country:"Pakistan",flag:"🇵🇰",type:"national",desc:"Birthday of Muhammad Ali Jinnah"},
+
+  // 🇦🇪 UAE
+  {month:1,day:1,name:"New Year's Day 🇦🇪",country:"UAE",flag:"🇦🇪",type:"national",desc:"Public holiday"},
+  {month:12,day:2,name:"UAE National Day 🇦🇪",country:"UAE",flag:"🇦🇪",type:"national",desc:"UAE Federation — 1971 🌟"},
+  {month:12,day:3,name:"UAE National Day (Day 2) 🇦🇪",country:"UAE",flag:"🇦🇪",type:"national",desc:"Continuation of National Day celebrations"},
+
+  // 🇸🇦 SAUDI ARABIA
+  {month:9,day:23,name:"Saudi National Day 🇸🇦",country:"Saudi Arabia",flag:"🇸🇦",type:"national",desc:"Unification of the Kingdom — 1932 🌴"},
+  {month:2,day:22,name:"Saudi Founding Day 🇸🇦",country:"Saudi Arabia",flag:"🇸🇦",type:"national",desc:"Founding of the First Saudi State — 1727"},
+];
+
+// Get national holidays for a given date
+function getNationalHolidaysForDay(date){
+  const m=date.getMonth()+1,d=date.getDate();
+  return NATIONAL_HOLIDAYS.filter(h=>h.month===m&&h.day===d);
+}
+["Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Inauspicious","Inauspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious"];
+const YOGA_NATURE=["Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Inauspicious","Inauspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious"];
+const TITHI_NATURE=["Auspicious","Auspicious","Auspicious","Mixed","Auspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Auspicious","Auspicious","Mixed","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Inauspicious","Inauspicious"];
+const NAK_QUALITY=["Auspicious","Mixed","Mixed","Auspicious","Auspicious","Inauspicious","Auspicious","Auspicious","Inauspicious","Mixed","Auspicious","Auspicious","Auspicious","Auspicious","Auspicious","Mixed","Auspicious","Mixed","Mixed","Auspicious","Auspicious","Auspicious","Auspicious","Mixed","Mixed","Auspicious","Auspicious"];
+const NAK_LORDS_EN=["Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury","Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury","Ketu","Venus","Sun","Moon","Mars","Rahu","Jupiter","Saturn","Mercury"];
+const NAK_DEITY_EN=["Ashwini Kumaras","Yama","Agni","Brahma","Soma","Rudra","Aditi","Brihaspati","Sarpa","Pitru","Bhaga","Aryaman","Savitar","Vishwakarma","Vayu","Indra-Agni","Mitra","Indra","Nirrti","Apas","Vishwedeva","Vishnu","Ashta Vasus","Varuna","Aja Ekapad","Ahir Budhnya","Pushan"];
+const NAK_DESC_EN=["Dynamic healing energy; good for new beginnings, travel","Intense transformative energy; persistent efforts, creative work","Sharp cutting energy; bold actions, surgery","Nourishing fertile energy; excellent for all auspicious activities","Gentle searching quality; travel, research, communication","Stormy dissolving energy; removing obstacles, research","Restoring abundant energy; business, family matters","Nourishing protective energy; one of the best for all work","Coiling holding energy; medicine, research","Ancestral regal energy; leadership, tradition","Pleasure and enjoyment; arts, romance","Dutiful healing energy; service, medicine","Skilled careful energy; arts, crafts, business","Sparkling energy; arts, beauty","Independent self-reliant; travel, business","Transformative intense; debate, determination","Devoted harmonious; friendships, cooperation, worship","Protective competitive; competition, strategy","Sharp penetrating; research, philosophy","Invincible energy; water activities, purification","Victorious energy; excellent for important activities","Attentive prosperous; learning, music","Swift wealthy; business, travel","Healing mysterious; meditation, healing","Fiery wandering; bold fearless activities","Deep meditative; yoga, spiritual matters","Gentle prosperous; all auspicious ends, completion"];
+const RAHU_KAAL_SLOT=[7,1,6,4,5,3,2];
+const PSYM={Sun:"☉",Moon:"☽",Mars:"♂",Mercury:"☿",Jupiter:"♃",Venus:"♀",Saturn:"♄",Rahu:"☊",Ketu:"☋"};
+const MUHURTA_TYPES=[
+  {name:"Vivaha",icon:"💍",good:["Rohini","Mrigashira","Uttara Phalguni","Hasta","Uttara Ashadha","Uttara Bhadrapada","Revati"],tithis:[2,3,5,7,10,11,12,13],varas:[1,2,4,5],desc:"Marriage"},
+  {name:"Griha Pravesh",icon:"🏠",good:["Rohini","Mrigashira","Uttara Phalguni","Hasta","Chitra","Anuradha","Dhanishtha","Revati"],tithis:[2,3,5,7,10,11,12,13],varas:[1,2,3,4],desc:"Housewarming"},
+  {name:"Yatra",icon:"✈️",good:["Ashwini","Mrigashira","Punarvasu","Pushya","Hasta","Chitra","Swati","Shravana","Dhanishtha","Revati"],tithis:[2,3,5,7,10,11,12,13],varas:[0,1,3,4,5],desc:"Travel"},
+  {name:"Vyapara",icon:"💼",good:["Rohini","Mrigashira","Pushya","Uttara Phalguni","Hasta","Chitra","Swati","Anuradha","Shravana","Dhanishtha"],tithis:[2,3,5,7,10,11,12,13],varas:[1,3,4,5],desc:"Business"},
+  {name:"Vidyarambha",icon:"📚",good:["Ashwini","Mrigashira","Punarvasu","Pushya","Hasta","Chitra","Swati","Shravana","Revati"],tithis:[2,3,5,7,10,11,12,13],varas:[1,3,4],desc:"Education"},
+  {name:"Naamkaran",icon:"✍️",good:["Rohini","Mrigashira","Punarvasu","Pushya","Uttara Phalguni","Hasta","Swati","Anuradha","Shravana","Revati"],tithis:[2,3,5,7,10,11,12,13],varas:[1,2,3,4,5],desc:"Naming ceremony"},
+];
+
+let currentLang='en';
+let calMonth,calYear;
+
+function r(){return REGIONS[currentLang]||REGIONS.en;}
+function u(){return UI[currentLang]||UI.en;}
+function t(key){return u()[key]||UI.en[key]||key;}
+
+// ── CALCULATIONS ──
+function jd(date){const y=date.getFullYear(),m=date.getMonth()+1,d=date.getDate();const a=Math.floor((14-m)/12),yr=y+4800-a,mo=m+12*a-3;return d+Math.floor((153*mo+2)/5)+365*yr+Math.floor(yr/4)-Math.floor(yr/100)+Math.floor(yr/400)-32045;}
+function sunLon(J){const n=J-2451545;const L=(280.46+0.9856474*n)%360;const g=((357.528+0.9856003*n)%360)*Math.PI/180;return(L+1.915*Math.sin(g)+0.02*Math.sin(2*g)+360)%360;}
+function moonLon(J){const n=J-2451545;const L=(218.316+13.176396*n)%360;const M=((134.963+13.064993*n)%360)*Math.PI/180;const F=((93.272+13.229350*n)%360)*Math.PI/180;return(L+6.289*Math.sin(M)-1.274*Math.sin(2*F)+0.658*Math.sin(2*F-M)+360)%360;}
+function rashiIdx(lon){return Math.floor(((lon%360)+360)%360/30);}
+function fmtH(h){const hr=Math.floor(h)%24,mn=Math.floor((h-Math.floor(h))*60);return`${hr.toString().padStart(2,'0')}:${mn.toString().padStart(2,'0')}`}
+
+function computeP(date){
+  const J=jd(date)+0.5,sl=sunLon(J),ml=moonLon(J),ay=23.7;
+  const ssl=(sl-ay+360)%360,sml=(ml-ay+360)%360;
+  const tDeg=((ml-sl)+360)%360,tN=Math.floor(tDeg/12),tPct=(tDeg%12)/12*100;
+  const nN=Math.floor(((sml+360)%360/13.3333))%27,nPct=((sml%13.3333)/13.3333)*100;
+  const yN=Math.floor(((sl+ml)%360)/13.3333)%27,kN=Math.floor(tDeg/6)%7;
+  const vara=date.getDay();
+  // Solar masa (for Tamil/Bengali solar calendars)
+  const solarMasaN=Math.floor(ssl/30)%12;
+  // Lunar masa (for Hindi/Telugu/English)
+  const lunarMasaN=Math.floor(ssl/30)%12;
+  const reg=r();
+  const masaN=solarMasaN; // both roughly aligned
+  // Era year
+  const eraYear=date.getFullYear()+reg.eraOffset;
+  return{
+    tithi:{name:reg.tithiNames[tN],num:tN,pct:tPct,nature:TITHI_NATURE[tN],paksha:tN<15?reg.pakshaShukla:reg.pakshaKrishna,pakshaCh:tN<15?"S":"K",tithiNum1:(tN%15)+1},
+    nakshatra:{name:reg.nakNames[nN],nameEN:["Ashwini","Bharani","Krittika","Rohini","Mrigashira","Ardra","Punarvasu","Pushya","Ashlesha","Magha","Purva Phalguni","Uttara Phalguni","Hasta","Chitra","Swati","Vishakha","Anuradha","Jyeshtha","Mula","Purva Ashadha","Uttara Ashadha","Shravana","Dhanishtha","Shatabhisha","Purva Bhadrapada","Uttara Bhadrapada","Revati"][nN],num:nN,pct:nPct},
+    yoga:{name:reg.yogaNames[yN],num:yN,nature:YOGA_NATURE[yN]},
+    karana:{name:reg.karanaNames[kN%7]},
+    vara:{name:reg.varNames[vara],lord:["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"][vara],num:vara},
+    masa:{name:reg.masaNames[masaN],num:masaN},
+    eraYear,
+    moonPhase:tDeg,siderealSun:ssl,siderealMoon:sml,
+    planets:{
+      Sun:{rashi:rashiIdx(ssl),name:reg.rashiNames[rashiIdx(ssl)]},
+      Moon:{rashi:rashiIdx(sml),name:reg.rashiNames[rashiIdx(sml)]},
+      Mars:{rashi:rashiIdx((ssl+72+J*0.524)%360)},
+      Mercury:{rashi:rashiIdx((ssl+30+J*1.3)%360)},
+      Jupiter:{rashi:rashiIdx((ssl+120+J*0.083)%360)},
+      Venus:{rashi:rashiIdx((ssl+55+J*0.615)%360)},
+      Saturn:{rashi:rashiIdx((ssl+240+J*0.034)%360)},
+      Rahu:{rashi:rashiIdx((360-((J*0.053)%360))%360)},
+      Ketu:{rashi:rashiIdx(((J*0.053+180)%360))}
+    }
+  };
+}
+
+function getMoonPhaseLabel(deg){
+  const reg=r();
+  if(deg<12)return reg.moonPhases[0];if(deg<72)return reg.moonPhases[1];if(deg<108)return reg.moonPhases[2];
+  if(deg<168)return reg.moonPhases[3];if(deg<192)return reg.moonPhases[4];if(deg<252)return reg.moonPhases[5];
+  if(deg<288)return reg.moonPhases[6];return reg.moonPhases[7];
+}
+
+function drawMoon(deg,el){const phase=deg/360,r=22,cx=25,cy=25;let d;if(phase<=0.5){const x=r*Math.cos(2*Math.PI*phase);d=`M ${cx} ${cy-r} A ${r} ${r} 0 0 1 ${cx} ${cy+r} A ${Math.abs(x)} ${r} 0 0 ${phase<0.25?0:1} ${cx} ${cy-r} Z`;}else{const x=r*Math.cos(2*Math.PI*phase);d=`M ${cx} ${cy-r} A ${r} ${r} 0 0 0 ${cx} ${cy+r} A ${Math.abs(x)} ${r} 0 0 ${phase<0.75?1:0} ${cx} ${cy-r} Z`;}el.innerHTML=`<svg viewBox="0 0 50 50" style="width:50px;height:50px"><circle cx="${cx}" cy="${cy}" r="${r}" fill="#d1d5db"/><path d="${d}" fill="#374151" opacity="0.9"/></svg>`;}
+
+function sunriseSunset(date){const n=jd(date)-2451545+0.5,L=(280.46+0.9856474*n)%360,g=((357.528+0.9856003*n)%360)*Math.PI/180;const lam=(L+1.915*Math.sin(g)+0.02*Math.sin(2*g))*Math.PI/180,eps=23.439*Math.PI/180;const dec=Math.asin(Math.sin(eps)*Math.sin(lam)),lat=28.6*Math.PI/180,lon=77.2;const cosH=(-Math.tan(lat)*Math.tan(dec)),H=Math.acos(Math.max(-1,Math.min(1,cosH)))*180/Math.PI;const tr=12-(lon/15)-((L+1.915*Math.sin(g)+0.02*Math.sin(2*g)-357.528-0.9856003*n)/360*24);const rise=(tr-H/15+24)%24,set=(tr+H/15+24)%24;return{rise:fmtH(rise),set:fmtH(set),riseH:rise,setH:set};}
+function getInauspicious(vara,rH,sH){const dl=(sH-rH)/8,rkS=RAHU_KAAL_SLOT[vara],gu=[6,5,4,3,2,1,0],ym=[4,3,2,1,0,6,5];return{rk:{s:fmtH(rH+(rkS-1)*dl),e:fmtH(rH+rkS*dl)},gk:{s:fmtH(rH+gu[vara]*dl),e:fmtH(rH+(gu[vara]+1)*dl)},ym:{s:fmtH(rH+ym[vara]*dl),e:fmtH(rH+(ym[vara]+1)*dl)}};}
+function getChoghadiya(vara,rH,sH){const dl=(sH-rH)/8;const seqs=[[0,5,4,3,2,1,6,0],[1,6,5,4,3,2,0,1],[2,0,6,5,4,3,1,2],[3,1,0,6,5,4,2,3],[4,2,1,0,6,5,3,4],[5,3,2,1,0,6,4,5],[6,4,3,2,1,0,5,6]];const reg=r();const cgNames_en=["Udvega","Chara","Labha","Amrita","Kala","Shubha","Rog"];const nats=["Inauspicious","Neutral","Auspicious","Auspicious","Inauspicious","Auspicious","Inauspicious"];const nowH=new Date().getHours()+new Date().getMinutes()/60;return(seqs[vara]||seqs[0]).map((s,i)=>{const st=rH+i*dl,en=st+dl;return{name:cgNames_en[s],nature:nats[s],start:fmtH(st),end:fmtH(en),isActive:nowH>=st&&nowH<en};});}
+function getAshtakavarga(p){const pl=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"],bf={Sun:[1,2,4,7,8,9,10,11],Moon:[3,6,10,11],Mars:[1,2,4,7,8,9,10,11],Mercury:[1,3,5,6,9,10,11,12],Jupiter:[1,2,3,4,7,8,10,11],Venus:[1,2,3,4,5,8,9,11,12],Saturn:[3,5,6,11,12]};const res={};pl.forEach(n=>{res[n]=Array(12).fill(0).map((_,ri)=>{const pr=p.planets[n]?p.planets[n].rashi:0,dist=(ri-pr+12)%12+1;return bf[n].includes(dist)?1:0;});});return{byPlanet:res,sarvashtaka:Array(12).fill(0).map((_,ri)=>pl.reduce((s,n)=>s+res[n][ri],0))};}
+
+function getEventsForDay(p,date){
+  const reg=r(),events=[],seen=new Set();
+  const allFests=[...COMMON_FESTIVALS,...(reg.extraFestivals||[])];
+  for(const f of allFests){
+    let match=false;
+    const tM=f.tithi===undefined||f.tithi===p.tithi.tithiNum1||(f.tithi===30&&p.tithi.num===29);
+    const pM=f.paksha===undefined||f.paksha===p.tithi.pakshaCh;
+    const mM=f.masa===undefined||f.masa===p.masa.name||f.masa===["Chaitra","Vaishakha","Jyeshtha","Ashadha","Shravana","Bhadrapada","Ashwin","Kartika","Margashirsha","Pausha","Magha","Phalguna"][p.masa.num];
+    if(tM&&pM&&mM)match=true;
+    if(match&&!seen.has(f.name)){seen.add(f.name);events.push(f);}
+  }
+  return events;
+}
+
+function setLang(lang){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  const map={en:0,hi:1,ta:2,te:3,bn:4};
+  document.querySelectorAll('.lang-btn')[map[lang]].classList.add('active');
+  const reg=REGIONS[lang];
+  document.getElementById('logo-name').textContent='Global Panchang';
+  document.getElementById('logo-tagline').textContent=reg.calName;
+  document.getElementById('region-badge').textContent=reg.name;
+  // Update tab labels
+  document.querySelectorAll('.tab-label').forEach(el=>{el.textContent=t(el.dataset.key);});
+  // Update static UI keys
+  document.querySelectorAll('[data-key]').forEach(el=>{if(!el.classList.contains('tab-label'))el.textContent=t(el.dataset.key);});
+  calMonth=null;
+  renderAll();
+}
+
+function renderAll(){
+  const dpick=document.getElementById('dpick'),tz=document.getElementById('tzpick').value,now=new Date();
+  if(!dpick.value){dpick.value=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;}
+  const[yr,mo,dy]=dpick.value.split('-').map(Number),date=new Date(yr,mo-1,dy);
+  const fmt=new Intl.DateTimeFormat('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:tz});
+  document.getElementById('display-date').textContent=fmt.format(date);
+  const p=computeP(date),ss=sunriseSunset(date),in2=getInauspicious(p.vara.num,ss.riseH,ss.setH),cg=getChoghadiya(p.vara.num,ss.riseH,ss.setH),todayEvents=getEventsForDay(p,date);
+  const reg=r();
+  const nc={Auspicious:'ba',Inauspicious:'bi',Mixed:'bn',Neutral:'bn'};
+  const nb={Auspicious:t('auspicious'),Inauspicious:t('inauspLabel'),Mixed:t('mixed'),Neutral:t('neutral')};
+
+  // Today banner
+  const tb=document.getElementById('today-banner');
+  const natHols=getNationalHolidaysForDay(date);
+  if(todayEvents.length||natHols.length){
+    const allBadges=[
+      ...todayEvents.map(e=>`<span class="badge ${e.type==='major'?'bw':e.type==='vrat'?'bpurple':e.type==='ekadashi'?'bteal':'bpink'}">${e.name}</span>`),
+      ...natHols.map(h=>`<span class="badge" style="background:#1a2a1a;color:#6FCF8A;border:1px solid #3A6A40">${h.flag} ${h.name}</span>`)
+    ];
+    tb.innerHTML=`<div class="today-banner"><div class="tb-lbl">🪔 ${t('todayObs')}</div><div class="tb-badges">${allBadges.join('')}</div></div>`;
+  } else tb.innerHTML='';
+
+  // Summary cards — all in regional language
+  document.getElementById('p-cards').innerHTML=[
+    {lbl:t('tithi'),val:p.tithi.name,sub:p.tithi.paksha+' · '+Math.round(p.tithi.pct)+'%'},
+    {lbl:t('nakshatra'),val:p.nakshatra.name,sub:Math.round(p.nakshatra.pct)+'% elapsed'},
+    {lbl:t('yoga'),val:p.yoga.name,sub:nb[p.yoga.nature]||p.yoga.nature},
+    {lbl:t('vara'),val:p.vara.name,sub:t('lord')+': '+p.vara.lord},
+    {lbl:t('masa'),val:p.masa.name,sub:reg.calType==='solar'?'Solar':'Lunar'},
+    {lbl:t('era'),val:p.eraYear,sub:reg.calName},
+  ].map(c=>`<div class="mini-card"><div class="lbl">${c.lbl}</div><div class="val">${c.val}</div><div class="sub">${c.sub}</div></div>`).join('');
+
+  // Details table — regional names
+  const rashiSym=["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+  document.getElementById('p-tbl').innerHTML=`
+    <tr><td>${t('tithiNature')}</td><td><span class="badge ${nc[p.tithi.nature]}">${nb[p.tithi.nature]}</span></td></tr>
+    <tr><td>${t('karana')}</td><td>${p.karana.name}</td></tr>
+    <tr><td>${t('yogaNature')}</td><td><span class="badge ${nc[p.yoga.nature]}">${nb[p.yoga.nature]}</span></td></tr>
+    <tr><td>${t('nakLord')}</td><td>${NAK_LORDS_EN[p.nakshatra.num]}</td></tr>
+    <tr><td>${t('nakDeity')}</td><td>${NAK_DEITY_EN[p.nakshatra.num]}</td></tr>
+    <tr><td>${t('sunRashi')}</td><td>${rashiSym[p.planets.Sun.rashi]} ${reg.rashiNames[p.planets.Sun.rashi]}</td></tr>
+    <tr><td>${t('moonRashi')}</td><td>${rashiSym[p.planets.Moon.rashi]} ${reg.rashiNames[p.planets.Moon.rashi]}</td></tr>
+    <tr><td>${t('moonPhase')}</td><td>${getMoonPhaseLabel(p.moonPhase)}</td></tr>`;
+
+  // Sun & Moon
+  const sm=document.getElementById('sunmoon');
+  sm.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)"><span style="font-size:20px">☀️</span><div><div style="font-weight:700;font-size:13px">${t('sunrise')} ${ss.rise} · ${t('sunset')} ${ss.set}</div><div style="font-size:11px;color:var(--muted)">${t('approxLoc')}</div></div></div><div style="display:flex;align-items:center;gap:10px;padding-top:10px"><div id="moon-svg"></div><div><div style="font-weight:700;font-size:13px">${getMoonPhaseLabel(p.moonPhase)}</div><div style="font-size:11px;color:var(--muted)">${t('lunarDay')} ${Math.round(p.moonPhase/12)+1} / 30</div><div style="font-size:11px;color:var(--muted)">${reg.rashiNames[p.planets.Moon.rashi]}</div></div></div>`;
+  drawMoon(p.moonPhase,document.getElementById('moon-svg'));
+
+  document.getElementById('inauspicious').innerHTML=`<div class="rahu-box"><span style="font-size:18px">⛔</span><div><div style="font-size:11px;color:#991b1b;font-weight:700">${t('rahuKaal')}</div><div style="font-size:13px;font-weight:700;color:#7f1d1d">${in2.rk.s} – ${in2.rk.e}</div></div></div><div class="warn-box"><b>${t('gulikKaal')}</b> ${in2.gk.s} – ${in2.gk.e}</div><div class="warn-box" style="margin-bottom:0"><b>${t('yamakantam')}</b> ${in2.ym.s} – ${in2.ym.e}</div>`;
+
+  // Planets — regional rashi names
+  document.getElementById('planets').innerHTML=Object.entries(p.planets).map(([n,d])=>`<div class="pchip"><span class="psym">${PSYM[n]}</span><div><div class="pn">${n}</div><div class="pr">${rashiSym[d.rashi]} ${reg.rashiNames[d.rashi]}</div></div></div>`).join('');
+
+  // Choghadiya
+  document.getElementById('choghadiya').innerHTML=cg.map(c=>{const bc=c.nature==='Auspicious'?'ba':c.nature==='Inauspicious'?'bi':'bn';return`<div class="cg-cell${c.isActive?' now':''}"><div class="cn">${c.name}</div><div class="ct">${c.start}–${c.end}</div><span class="badge ${bc}" style="font-size:9px;margin-top:3px;display:inline-block">${nb[c.nature]||c.nature}</span></div>`;}).join('');
+
+  // Muhurta — match on English nakshatra name
+  const mR=MUHURTA_TYPES.map(m=>{const ng=m.good.includes(p.nakshatra.nameEN),tg=m.tithis.includes(p.tithi.tithiNum1),vg=m.varas.includes(p.vara.num),yg=p.yoga.nature==='Auspicious';const sc=(ng?2:0)+(tg?1:0)+(vg?1:0)+(yg?1:0);return{...m,sc,cls:sc>=4?'good':sc>=2?'med':'bad',lbl:sc>=4?t('excellent'):sc>=3?t('good'):sc>=2?t('moderate'):t('avoid'),lb:sc>=4?'ba':sc>=3?'ba':sc>=2?'bw':'bi',ng,tg,vg,yg};});
+  document.getElementById('muhurta-grid').innerHTML=mR.map(m=>`<div class="mcard ${m.cls}"><div class="mt">${m.icon} ${m.name}</div><div class="ms">${m.desc}</div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px"><span class="badge ${m.ng?'ba':'bi'}" style="font-size:10px">Nak ${m.ng?'✓':'✗'}</span><span class="badge ${m.tg?'ba':'bi'}" style="font-size:10px">Tithi ${m.tg?'✓':'✗'}</span><span class="badge ${m.vg?'ba':'bi'}" style="font-size:10px">Vara ${m.vg?'✓':'✗'}</span><span class="badge ${m.yg?'ba':'bi'}" style="font-size:10px">Yoga ${m.yg?'✓':'✗'}</span></div><span class="badge ${m.lb}">${m.lbl}</span></div>`).join('');
+  const abS=(ss.riseH+ss.setH)/2-0.4,abE=abS+0.8;
+  document.getElementById('abhijit-body').innerHTML=`<p style="font-size:13px;color:var(--muted);margin-bottom:10px">${t('abhijitDesc')}</p><div class="abhijit-box">⭐ ${fmtH(abS)} – ${fmtH(abE)}<span style="font-size:12px;font-weight:400;color:#065f46;margin-left:8px">~48 min</span></div>`;
+  const gC=mR.filter(m=>m.sc>=3).length,tS=mR.reduce((s,m)=>s+m.sc,0),dr=tS>=16?t('highlyAusp'):tS>=12?t('generalAusp'):tS>=8?t('mixedDay'):t('inauspDay'),dc=tS>=12?'ba':tS>=8?'bw':'bi';
+  document.getElementById('day-summary').innerHTML=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px"><span class="badge ${dc}" style="font-size:14px;padding:5px 16px">${dr}</span><span style="font-size:12px;color:var(--muted)">${gC}/${MUHURTA_TYPES.length} ${t('ofMuhurtas')}</span></div><table class="ptbl"><tr><td>${t('tithi')}</td><td><span class="badge ${nc[p.tithi.nature]}">${nb[p.tithi.nature]}</span></td></tr><tr><td>${t('nakshatra')}</td><td><span class="badge ${NAK_QUALITY[p.nakshatra.num]==='Auspicious'?'ba':NAK_QUALITY[p.nakshatra.num]==='Inauspicious'?'bi':'bn'}">${nb[NAK_QUALITY[p.nakshatra.num]]}</span></td></tr><tr><td>${t('yoga')}</td><td><span class="badge ${nc[p.yoga.nature]}">${nb[p.yoga.nature]}</span></td></tr><tr><td>${t('vara')}</td><td>${p.vara.name}</td></tr></table>`;
+
+  // Calendar
+  if(!calMonth){calMonth=date.getMonth();calYear=date.getFullYear();}
+  renderCalendar(calYear,calMonth,p);
+
+  // Nakshatra — regional names
+  document.getElementById('nak-grid').innerHTML=reg.nakNames.map((name,i)=>{const iT=i===p.nakshatra.num,q=NAK_QUALITY[i],qc=q==='Auspicious'?'ba':q==='Inauspicious'?'bi':'bn';return`<div class="nak-card${iT?' hi':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div style="font-size:14px;font-weight:700">${iT?'🌙 ':''}${name}</div><div style="font-size:11px;color:#aaa">${i+1}/27</div></div><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px"><span class="badge ${qc}" style="font-size:10px">${nb[q]||q}</span><span class="badge binfo" style="font-size:10px">${NAK_LORDS_EN[i]}</span><span class="badge bn" style="font-size:10px">${NAK_DEITY_EN[i]}</span></div><div style="font-size:12px;color:#666;line-height:1.5">${NAK_DESC_EN[i]}</div></div>`;}).join('');
+
+  // Ashtakavarga — regional rashi names
+  const av=getAshtakavarga(p),pl=["Sun","Moon","Mars","Mercury","Jupiter","Venus","Saturn"];
+  const rashiAbbr=reg.rashiNames.map(n=>n.slice(0,3));
+  let th=`<tr><th>Planet</th>${rashiAbbr.map(rn=>`<th>${rn}</th>`).join('')}<th>Total</th></tr>`;
+  pl.forEach(n=>{const row=av.byPlanet[n],tot=row.reduce((s,v)=>s+v,0);th+=`<tr><td>${PSYM[n]} ${n}</td>${row.map(v=>`<td style="color:${v?'#065f46':'#aaa'}">${v}</td>`).join('')}<td><b>${tot}</b></td></tr>`;});
+  th+=`<tr style="background:var(--bg2)"><td><b>Sarvashtaka</b></td>${av.sarvashtaka.map(v=>`<td><span class="badge ${v>=28?'ba':v>=20?'binfo':v>=12?'bw':'bi'}" style="font-size:10px">${v}</span></td>`).join('')}<td><b>${av.sarvashtaka.reduce((s,v)=>s+v,0)}</b></td></tr>`;
+  document.getElementById('ashta-tbl').innerHTML=th;
+  const br=av.sarvashtaka.indexOf(Math.max(...av.sarvashtaka)),wr=av.sarvashtaka.indexOf(Math.min(...av.sarvashtaka));
+  const bp=pl.reduce((b,n)=>{const tot=av.byPlanet[n].reduce((s,v)=>s+v,0);return tot>(av.byPlanet[b]||[]).reduce((s,v)=>s+v,0)?n:b},pl[0]);
+  document.getElementById('ashta-info').innerHTML=`<div class="ai-card"><div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${t('strongestRashi')}</div><div style="font-size:18px;font-weight:700;color:var(--accent)">${rashiSym[br]} ${reg.rashiNames[br]}</div><div style="font-size:11px;color:var(--muted)">${av.sarvashtaka[br]} ${t('points')}</div></div><div class="ai-card"><div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${t('weakestRashi')}</div><div style="font-size:18px;font-weight:700;color:var(--accent)">${rashiSym[wr]} ${reg.rashiNames[wr]}</div><div style="font-size:11px;color:var(--muted)">${av.sarvashtaka[wr]} ${t('points')}</div></div><div class="ai-card"><div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${t('strongestPlanet')}</div><div style="font-size:18px;font-weight:700;color:var(--accent)">${PSYM[bp]} ${bp}</div><div style="font-size:11px;color:var(--muted)">Most benefic ${t('points')}</div></div><div class="ai-card"><div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">${t('moonScore')}</div><div style="font-size:18px;font-weight:700;color:var(--accent)">${av.byPlanet.Moon[p.planets.Moon.rashi]} pts</div><div style="font-size:11px;color:var(--muted)">${reg.rashiNames[p.planets.Moon.rashi]}</div></div>`;
+}
+
+function renderCalendar(yr,mo){
+  const reg=r();
+  document.getElementById('cal-month-lbl').textContent=new Date(yr,mo,1).toLocaleString('default',{month:'long',year:'numeric'})+' · '+reg.calName;
+  document.getElementById('cal-heads').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cal-head">${d}</div>`).join('');
+  const first=new Date(yr,mo,1).getDay(),dim=new Date(yr,mo+1,0).getDate(),today=new Date();
+  const tc={major:'fdot-major',vrat:'fdot-vrat',ekadashi:'fdot-ekadashi',special:'fdot-special'};
+  let html='',fl=[];
+  for(let i=0;i<first;i++)html+=`<div class="cal-day other"></div>`;
+  for(let d=1;d<=dim;d++){
+    const date=new Date(yr,mo,d),p=computeP(date),evs=getEventsForDay(p,date);
+    const natHols=getNationalHolidaysForDay(date);
+    const {filteredEvs,filteredNat}=applyFilters(evs,natHols);
+    const isT=date.getDate()===today.getDate()&&date.getMonth()===today.getMonth()&&date.getFullYear()===today.getFullYear();
+    if(filteredEvs.length||filteredNat.length)fl.push({d,evs:filteredEvs,natHols:filteredNat,tithi:p.tithi.name,masa:p.masa.name});
+    const allDots=[
+      ...filteredEvs.slice(0,1).map(e=>`<span class="fdot ${tc[e.type]||'fdot-major'}">${e.name}</span>`),
+      ...filteredNat.slice(0,1).map(h=>`<span class="fdot" style="background:#1a2a1a;color:#6FCF8A">${h.flag} ${h.name}</span>`)
+    ];
+    html+=`<div class="cal-day${isT?' today':''}"><div class="dn">${d}</div><div class="dt">${p.tithi.pakshaCh}${p.tithi.tithiNum1} ${reg.nakNames[p.nakshatra.num].slice(0,4)}</div>${allDots.join('')}</div>`;
+  }
+  document.getElementById('cal-days').innerHTML=html;
+  const dc={major:'#92400e',vrat:'#5b21b6',ekadashi:'#134e4a',special:'#9d174d'};
+  document.getElementById('festival-list').innerHTML=fl.length?fl.map(f=>`<div class="fitem"><div style="min-width:28px;font-size:16px;font-weight:700;color:var(--accent);padding-top:1px">${f.d}</div><div style="flex:1">
+    ${(f.evs||[]).map(e=>`<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px"><div style="width:9px;height:9px;border-radius:50%;background:${dc[e.type]||'#92400e'};margin-top:4px;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600">${e.name} <span class="badge ${e.type==='major'?'bw':e.type==='vrat'?'bpurple':e.type==='ekadashi'?'bteal':'bpink'}" style="font-size:10px">${e.type}</span></div><div style="font-size:11px;color:var(--muted)">${e.desc} · ${f.masa} · ${f.tithi}</div></div></div>`).join('')}
+    ${(f.natHols||[]).map(h=>`<div style="display:flex;align-items:flex-start;gap:7px;margin-bottom:5px"><div style="width:9px;height:9px;border-radius:50%;background:#3A6A40;margin-top:4px;flex-shrink:0"></div><div><div style="font-size:13px;font-weight:600">${h.flag} ${h.name} <span class="badge" style="background:#1a2a1a;color:#6FCF8A;font-size:10px">national</span></div><div style="font-size:11px;color:var(--muted)">${h.desc} · ${h.country}</div></div></div>`).join('')}
+  </div></div>`).join(''):`<p style="font-size:13px;color:var(--muted)">No major events this month.</p>`;
+}
+
+// ── LOCATION & NOTIFICATION JS ──
+
+// Timezone map: maps Intl timezone → select option value
+const TZ_MAP = {
+  'Asia/Calcutta':'Asia/Kolkata','Asia/Kolkata':'Asia/Kolkata',
+  'Asia/Colombo':'Asia/Colombo','Asia/Kathmandu':'Asia/Kathmandu',
+  'Asia/Dhaka':'Asia/Dhaka','Asia/Karachi':'Asia/Karachi',
+  'Asia/Kabul':'Asia/Kabul','Asia/Singapore':'Asia/Singapore',
+  'Asia/Kuala_Lumpur':'Asia/Kuala_Lumpur','Asia/Bangkok':'Asia/Bangkok',
+  'Asia/Jakarta':'Asia/Jakarta','Asia/Manila':'Asia/Manila',
+  'Asia/Ho_Chi_Minh':'Asia/Ho_Chi_Minh','Asia/Yangon':'Asia/Yangon',
+  'Asia/Tokyo':'Asia/Tokyo','Asia/Shanghai':'Asia/Shanghai',
+  'Asia/Seoul':'Asia/Seoul','Asia/Hong_Kong':'Asia/Hong_Kong',
+  'Asia/Taipei':'Asia/Taipei','Asia/Dubai':'Asia/Dubai',
+  'Asia/Riyadh':'Asia/Riyadh','Asia/Kuwait':'Asia/Kuwait',
+  'Asia/Tehran':'Asia/Tehran','Asia/Baghdad':'Asia/Baghdad',
+  'Africa/Nairobi':'Africa/Nairobi','Africa/Lagos':'Africa/Lagos',
+  'Africa/Cairo':'Africa/Cairo','Africa/Johannesburg':'Africa/Johannesburg',
+  'Europe/London':'Europe/London','Europe/Dublin':'Europe/Dublin',
+  'Europe/Paris':'Europe/Paris','Europe/Berlin':'Europe/Berlin',
+  'Europe/Rome':'Europe/Rome','Europe/Madrid':'Europe/Madrid',
+  'Europe/Moscow':'Europe/Moscow','America/New_York':'America/New_York',
+  'America/Chicago':'America/Chicago','America/Denver':'America/Denver',
+  'America/Los_Angeles':'America/Los_Angeles','America/Toronto':'America/Toronto',
+  'America/Vancouver':'America/Vancouver','America/Sao_Paulo':'America/Sao_Paulo',
+  'America/Argentina/Buenos_Aires':'America/Argentina/Buenos_Aires',
+  'Australia/Sydney':'Australia/Sydney','Australia/Melbourne':'Australia/Melbourne',
+  'Pacific/Auckland':'Pacific/Auckland',
+};
+
+// Maps timezone → country name (must match NATIONAL_HOLIDAYS country field)
+const TZ_TO_COUNTRY = {
+  'Asia/Kolkata':'India','Asia/Calcutta':'India',
+  'Asia/Colombo':'Sri Lanka','Asia/Kathmandu':'Nepal',
+  'Asia/Dhaka':'Bangladesh','Asia/Karachi':'Pakistan',
+  'Asia/Kabul':'Afghanistan','Asia/Singapore':'Singapore',
+  'Asia/Kuala_Lumpur':'Malaysia','Asia/Bangkok':'Thailand',
+  'Asia/Jakarta':'Indonesia','Asia/Manila':'Philippines',
+  'Asia/Ho_Chi_Minh':'Vietnam','Asia/Yangon':'Myanmar',
+  'Asia/Dubai':'UAE','Asia/Riyadh':'Saudi Arabia',
+  'Asia/Kuwait':'Kuwait','Asia/Tehran':'Iran',
+  'Asia/Baghdad':'Iraq','Asia/Jerusalem':'Israel',
+  'Asia/Beirut':'Lebanon','Asia/Tashkent':'Uzbekistan',
+  'Asia/Almaty':'Kazakhstan','Asia/Tokyo':'Japan',
+  'Asia/Shanghai':'China','Asia/Seoul':'South Korea',
+  'Asia/Hong_Kong':'Hong Kong','Asia/Taipei':'Taiwan',
+  'Africa/Nairobi':'Kenya','Africa/Lagos':'Nigeria',
+  'Africa/Cairo':'Egypt','Africa/Johannesburg':'South Africa',
+  'Africa/Addis_Ababa':'Ethiopia','Africa/Dar_es_Salaam':'Tanzania',
+  'Africa/Kampala':'Uganda','Africa/Accra':'Ghana',
+  'Africa/Casablanca':'Morocco',
+  'Europe/London':'UK','Europe/Dublin':'Ireland',
+  'Europe/Lisbon':'Portugal','Europe/Madrid':'Spain',
+  'Europe/Paris':'France','Europe/Berlin':'Germany',
+  'Europe/Amsterdam':'Netherlands','Europe/Brussels':'Belgium',
+  'Europe/Zurich':'Switzerland','Europe/Rome':'Italy',
+  'Europe/Stockholm':'Sweden','Europe/Oslo':'Norway',
+  'Europe/Copenhagen':'Denmark','Europe/Helsinki':'Finland',
+  'Europe/Warsaw':'Poland','Europe/Vienna':'Austria',
+  'Europe/Moscow':'Russia','Europe/Kiev':'Ukraine',
+  'America/New_York':'USA','America/Chicago':'USA',
+  'America/Denver':'USA','America/Los_Angeles':'USA',
+  'America/Anchorage':'USA','Pacific/Honolulu':'USA',
+  'America/Toronto':'Canada','America/Vancouver':'Canada',
+  'America/Edmonton':'Canada','America/Winnipeg':'Canada',
+  'America/Halifax':'Canada','America/Mexico_City':'Mexico',
+  'America/Jamaica':'Jamaica','America/Trinidad':'Trinidad & Tobago',
+  'America/Guyana':'Guyana','America/Barbados':'Barbados',
+  'America/Panama':'Panama','America/Costa_Rica':'Costa Rica',
+  'America/Sao_Paulo':'Brazil','America/Manaus':'Brazil',
+  'America/Argentina/Buenos_Aires':'Argentina',
+  'America/Santiago':'Chile','America/Lima':'Peru',
+  'America/Bogota':'Colombia','America/Caracas':'Venezuela',
+  'America/La_Paz':'Bolivia','America/Montevideo':'Uruguay',
+  'Australia/Sydney':'Australia','Australia/Melbourne':'Australia',
+  'Australia/Brisbane':'Australia','Australia/Perth':'Australia',
+  'Australia/Adelaide':'Australia','Pacific/Auckland':'New Zealand',
+  'Pacific/Fiji':'Fiji',
+};
+
+function getCountryFromTz(tz){
+  return TZ_TO_COUNTRY[tz]||null;
+}
+
+function updateCountryFromTimezone(){
+  const tz=document.getElementById('tzpick').value;
+  const country=getCountryFromTz(tz);
+  // Set activeCountries to just this country (if we have holidays for it)
+  const hasHolidays=NATIONAL_HOLIDAYS.some(h=>h.country===country);
+  if(country&&hasHolidays){
+    activeCountries=new Set([country]);
+  } else {
+    // If no specific match, show India as default
+    activeCountries=new Set(['India']);
+  }
+  updateCountryFilterUI();
+  renderCalendar(calYear||new Date().getMonth(),calMonth||new Date().getMonth());
+}
+
+function updateCountryFilterUI(){
+  // Update the active country display badge
+  const badge=document.getElementById('active-country-badge');
+  if(badge){
+    const countryList=[...activeCountries].join(', ');
+    const flag=NATIONAL_HOLIDAYS.find(h=>activeCountries.has(h.country))?.flag||'🌍';
+    badge.textContent=flag+' '+countryList;
+  }
+  // Update chips if grid is shown
+  document.querySelectorAll('.country-chip').forEach(c=>{
+    c.classList.toggle('active',activeCountries.has(c.dataset.country));
+  });
+}
+
+function autoDetectTimezone(){
+  try{
+    const tz=Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const mapped=TZ_MAP[tz]||tz;
+    const sel=document.getElementById('tzpick');
+    for(let i=0;i<sel.options.length;i++){
+      if(sel.options[i].value===mapped){sel.selectedIndex=i;break;}
+    }
+    document.getElementById('location-status').innerHTML=`📍 Auto-detected: <b style="color:#F5C842">${tz}</b>`;
+    const locBar=document.getElementById('location-bar');
+    locBar.style.display='flex';
+    document.getElementById('location-text').textContent='📍 Timezone auto-detected: '+tz;
+    updateCountryFromTimezone();
+    calMonth=null;renderAll();
+  }catch(e){console.log('TZ detect failed',e);}
+}
+
+function requestLocation(){
+  if(!navigator.geolocation){
+    document.getElementById('location-status').innerHTML='❌ Geolocation not supported by your browser.';
+    return;
+  }
+  document.getElementById('location-status').innerHTML='⏳ Detecting your location…';
+  navigator.geolocation.getCurrentPosition(
+    (pos)=>{
+      // Use coordinates to get timezone via browser API
+      autoDetectTimezone();
+      document.getElementById('location-status').innerHTML=
+        `📍 Location detected! (${pos.coords.latitude.toFixed(2)}°, ${pos.coords.longitude.toFixed(2)}°)`;
+    },
+    (err)=>{
+      // Fall back to IP-based timezone
+      autoDetectTimezone();
+      document.getElementById('location-status').innerHTML='📍 Using device timezone (location denied).';
+    }
+  );
+}
+
+function dismissPermission(allow){
+  document.getElementById('permission-overlay').style.display='none';
+  if(allow){
+    // Location
+    if(document.getElementById('toggle-location').checked) requestLocation();
+    else autoDetectTimezone(); // still auto-detect from browser TZ
+    // Notifications
+    if(document.getElementById('toggle-daily').checked ||
+       document.getElementById('toggle-festival').checked){
+      enableNotifications();
+    }
+    // Copy toggles to settings panel
+    document.getElementById('ns-daily').checked=document.getElementById('toggle-daily').checked;
+    document.getElementById('ns-festival').checked=document.getElementById('toggle-festival').checked;
+    document.getElementById('ns-rahu').checked=document.getElementById('toggle-rahu').checked;
+  } else {
+    autoDetectTimezone();
+  }
+  saveNotifSettings();
+}
+
+function enableNotifications(){
+  if(!('Notification' in window)){
+    document.getElementById('notif-status-text').textContent='❌ Notifications not supported in this browser.';
+    document.getElementById('notif-enable-btn').style.display='none';
+    return;
+  }
+  Notification.requestPermission().then(perm=>{
+    updateNotifStatus(perm);
+    if(perm==='granted'){
+      scheduleTodayNotifications();
+    }
+  });
+}
+
+function updateNotifStatus(perm){
+  const txt=document.getElementById('notif-status-text');
+  const btn=document.getElementById('notif-enable-btn');
+  const box=document.getElementById('notif-permission-status');
+  if(perm==='granted'){
+    txt.textContent='✅ Notifications enabled! You will receive Panchang alerts.';
+    btn.style.display='none';
+    box.style.background='#1C3020';
+    box.style.borderColor='#3A6A40';
+    box.style.color='#6FCF8A';
+  } else if(perm==='denied'){
+    txt.textContent='❌ Notifications blocked. Please enable in browser settings.';
+    btn.style.display='none';
+    box.style.background='#3A1818';
+    box.style.borderColor='#6A3030';
+    box.style.color='#F47A7A';
+  } else {
+    txt.textContent='🔔 Click Enable to receive Panchang notifications.';
+  }
+}
+
+function scheduleTodayNotifications(){
+  if(Notification.permission!=='granted') return;
+  const settings=loadNotifSettings();
+  const now=new Date();
+
+  // Daily morning notification
+  if(settings.daily){
+    const p=computeP(now);
+    setTimeout(()=>{
+      new Notification('🕉 Good Morning — Daily Panchang', {
+        body:`Today: ${p.tithi.name} · ${p.nakshatra.name} · ${p.yoga.name}\nVara: ${p.vara.name}`,
+        icon:'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f549.png'
+      });
+    }, 500);
+  }
+
+  // Festival reminder
+  if(settings.festival){
+    const tomorrow=new Date(now); tomorrow.setDate(tomorrow.getDate()+1);
+    const tp=computeP(tomorrow);
+    const tevs=getEventsForDay(tp,tomorrow);
+    if(tevs.length){
+      setTimeout(()=>{
+        new Notification('🪔 Tomorrow: '+tevs[0].name, {
+          body:tevs[0].desc+'\n'+tevs.map(e=>e.name).join(' · '),
+          icon:'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1fa94.png'
+        });
+      }, 2000);
+    }
+  }
+
+  // Rahu Kaal alert
+  if(settings.rahu){
+    const ss=sunriseSunset(now);
+    const dl=(ss.setH-ss.riseH)/8;
+    const rkSlot=RAHU_KAAL_SLOT[now.getDay()];
+    const rkStart=ss.riseH+(rkSlot-1)*dl;
+    const rkMs=(rkStart*3600000)-(now.getHours()*3600000+now.getMinutes()*60000)-300000;
+    if(rkMs>0&&rkMs<86400000){
+      setTimeout(()=>{
+        new Notification('⛔ Rahu Kaal starting in 5 minutes', {
+          body:'Avoid starting new activities during Rahu Kaal.',
+          icon:'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/26d4.png'
+        });
+      }, rkMs);
+    }
+  }
+}
+
+function saveNotifSettings(){
+  const s={
+    daily:document.getElementById('ns-daily')?.checked||false,
+    festival:document.getElementById('ns-festival')?.checked||false,
+    rahu:document.getElementById('ns-rahu')?.checked||false,
+    moon:document.getElementById('ns-moon')?.checked||false,
+    muhurta:document.getElementById('ns-muhurta')?.checked||false,
+    abhijit:document.getElementById('ns-abhijit')?.checked||false,
+  };
+  try{localStorage.setItem('notif_settings',JSON.stringify(s));}catch(e){}
+}
+
+function loadNotifSettings(){
+  try{const s=localStorage.getItem('notif_settings');return s?JSON.parse(s):{daily:true,festival:true,rahu:false,moon:true,muhurta:false,abhijit:false};}
+  catch(e){return{daily:true,festival:true,rahu:false,moon:true,muhurta:false,abhijit:false};}
+}
+
+// Copy the timezone select options to settings panel
+function syncSettingsSelect(){
+  const src=document.getElementById('tzpick');
+  const dst=document.getElementById('settings-tz');
+  if(dst&&src){
+    dst.innerHTML=src.innerHTML;
+    dst.value=src.value;
+    dst.addEventListener('change',()=>{
+      src.value=dst.value;
+      calMonth=null;renderAll();
+    });
+  }
+}
+
+// On load
+window.addEventListener('load',()=>{
+  // Check if first visit
+  const visited=localStorage.getItem('gp_visited');
+  if(visited){
+    document.getElementById('permission-overlay').style.display='none';
+    autoDetectTimezone();
+  }
+  localStorage.setItem('gp_visited','1');
+  // Restore notification settings
+  const s=loadNotifSettings();
+  if(document.getElementById('ns-daily')) document.getElementById('ns-daily').checked=s.daily;
+  if(document.getElementById('ns-festival')) document.getElementById('ns-festival').checked=s.festival;
+  if(document.getElementById('ns-rahu')) document.getElementById('ns-rahu').checked=s.rahu;
+  if(document.getElementById('ns-moon')) document.getElementById('ns-moon').checked=s.moon;
+  if(document.getElementById('ns-muhurta')) document.getElementById('ns-muhurta').checked=s.muhurta;
+  if(document.getElementById('ns-abhijit')) document.getElementById('ns-abhijit').checked=s.abhijit;
+  // Check existing notification permission
+  if('Notification' in window) updateNotifStatus(Notification.permission);
+  if(Notification.permission==='granted') scheduleTodayNotifications();
+  syncSettingsSelect();
+  initCountryFilter();
+  updateCountryFromTimezone();
+  loadSavedRashi();
+  showHoroscopeUI();
+  if(savedRashi !== null) generateHoroscope(savedRashi);
+});
+
+// ── CALENDAR FILTERS ──
+const COUNTRIES=[...new Set(NATIONAL_HOLIDAYS.map(h=>h.country))].sort();
+let calFilters={major:true,vrat:true,ekadashi:true,special:true,national:true,regional:true};
+let activeCountries=new Set(COUNTRIES);
+let activeRegions=new Set(['all','north','south','east','west','kerala','tamil','telugu','bengali','assamese','punjab','gujarat','jain','buddhist','diaspora']);
+
+function initCountryFilter(){
+  const grid=document.getElementById('country-filter-grid');
+  if(!grid)return;
+  // Show all countries except the auto-detected one as "add more" options
+  grid.innerHTML=COUNTRIES.map(c=>{
+    const flag=NATIONAL_HOLIDAYS.find(h=>h.country===c)?.flag||'🌍';
+    const isActive=activeCountries.has(c);
+    return`<span class="country-chip${isActive?' active':''}" onclick="toggleCountry('${c}',this)" data-country="${c}">${flag} ${c}</span>`;
+  }).join('');
+}
+
+function toggleCountry(country,el){
+  if(activeCountries.has(country)){
+    // Don't allow removing the auto-detected country
+    const tz=document.getElementById('tzpick').value;
+    const autoCountry=getCountryFromTz(tz);
+    if(country===autoCountry){
+      el.style.animation='shake .3s';
+      setTimeout(()=>el.style.animation='',300);
+      return;
+    }
+    activeCountries.delete(country);
+    el.classList.remove('active');
+  } else {
+    activeCountries.add(country);
+    el.classList.add('active');
+  }
+  renderCalendar(calYear,calMonth);
+}
+
+function toggleFilter(type,on){
+  calFilters[type]=on;
+  const chip=document.querySelector(`.filter-chip[data-filter="${type}"]`);
+  if(chip)chip.classList.toggle('active',on);
+  if(type==='national'){
+    const wrap=document.getElementById('country-filter-wrap');
+    if(wrap)wrap.style.display=on?'block':'none';
+  }
+  renderCalendar(calYear,calMonth);
+}
+
+function toggleRegion(region,on){
+  if(on)activeRegions.add(region);else activeRegions.delete(region);
+  const chip=document.querySelector(`.filter-chip[data-rfilter="${region}"]`);
+  if(chip)chip.classList.toggle('active',on);
+  renderCalendar(calYear,calMonth);
+}
+
+function selectAllFilters(){
+  Object.keys(calFilters).forEach(k=>{calFilters[k]=true;});
+  document.querySelectorAll('.filter-chip').forEach(c=>{c.classList.add('active');const cb=c.querySelector('input');if(cb)cb.checked=true;});
+  document.querySelectorAll('.country-chip').forEach(c=>{c.classList.add('active');activeCountries.add(c.dataset.country);});
+  document.querySelectorAll('[data-rfilter]').forEach(c=>{activeRegions.add(c.dataset.rfilter);});
+  document.getElementById('country-filter-wrap').style.display='block';
+  renderCalendar(calYear,calMonth);
+}
+
+function clearAllFilters(){
+  Object.keys(calFilters).forEach(k=>{calFilters[k]=false;});
+  document.querySelectorAll('.filter-chip').forEach(c=>{c.classList.remove('active');const cb=c.querySelector('input');if(cb)cb.checked=false;});
+  document.querySelectorAll('.country-chip').forEach(c=>c.classList.remove('active'));
+  activeCountries.clear();activeRegions.clear();
+  document.getElementById('country-filter-wrap').style.display='none';
+  renderCalendar(calYear,calMonth);
+}
+
+function resetFilters(){
+  Object.keys(calFilters).forEach(k=>{calFilters[k]=true;});
+  document.querySelectorAll('.filter-chip').forEach(c=>{c.classList.add('active');const cb=c.querySelector('input');if(cb)cb.checked=true;});
+  document.querySelectorAll('.country-chip').forEach(c=>{c.classList.add('active');activeCountries.add(c.dataset.country);});
+  activeRegions=new Set(['all','north','south','east','west','kerala','tamil','telugu','bengali','assamese','punjab','gujarat','jain','buddhist','diaspora']);
+  document.querySelectorAll('[data-rfilter]').forEach(c=>c.classList.add('active'));
+  document.getElementById('country-filter-wrap').style.display='block';
+  renderCalendar(calYear,calMonth);
+}
+
+function applyFilters(evs,natHols){
+  const filteredEvs=evs.filter(e=>{
+    if(!calFilters[e.type])return false;
+    if(e.region&&e.region!=='all'&&calFilters.regional&&!activeRegions.has(e.region))return false;
+    return true;
+  });
+  const filteredNat=calFilters.national?natHols.filter(h=>activeCountries.has(h.country)):[];
+  return{filteredEvs,filteredNat};
+}
+
+// ── HOROSCOPE ──
+const RASHI_DATA = [
+  {idx:0,sym:'♈',name:'Mesh',eng:'Aries',lord:'Mars',element:'Fire',quality:'Cardinal'},
+  {idx:1,sym:'♉',name:'Vrishabh',eng:'Taurus',lord:'Venus',element:'Earth',quality:'Fixed'},
+  {idx:2,sym:'♊',name:'Mithun',eng:'Gemini',lord:'Mercury',element:'Air',quality:'Mutable'},
+  {idx:3,sym:'♋',name:'Kark',eng:'Cancer',lord:'Moon',element:'Water',quality:'Cardinal'},
+  {idx:4,sym:'♌',name:'Simha',eng:'Leo',lord:'Sun',element:'Fire',quality:'Fixed'},
+  {idx:5,sym:'♍',name:'Kanya',eng:'Virgo',lord:'Mercury',element:'Earth',quality:'Mutable'},
+  {idx:6,sym:'♎',name:'Tula',eng:'Libra',lord:'Venus',element:'Air',quality:'Cardinal'},
+  {idx:7,sym:'♏',name:'Vrischik',eng:'Scorpio',lord:'Mars',element:'Water',quality:'Fixed'},
+  {idx:8,sym:'♐',name:'Dhanu',eng:'Sagittarius',lord:'Jupiter',element:'Fire',quality:'Mutable'},
+  {idx:9,sym:'♑',name:'Makar',eng:'Capricorn',lord:'Saturn',element:'Earth',quality:'Cardinal'},
+  {idx:10,sym:'♒',name:'Kumbh',eng:'Aquarius',lord:'Saturn',element:'Air',quality:'Fixed'},
+  {idx:11,sym:'♓',name:'Meen',eng:'Pisces',lord:'Jupiter',element:'Water',quality:'Mutable'},
+];
+
+const RASHIS_EN=['Aries','Taurus','Gemini','Cancer','Leo','Virgo','Libra','Scorpio','Sagittarius','Capricorn','Aquarius','Pisces'];
+
+let savedRashi = null;
+let horoscopeCache = {}; // key: rashiIdx_date
+
+function loadSavedRashi(){
+  try{
+    const s = localStorage.getItem('gp_moon_sign');
+    if(s !== null) savedRashi = parseInt(s);
+  }catch(e){}
+}
+
+function selectRashi(idx){
+  savedRashi = idx;
+  try{ localStorage.setItem('gp_moon_sign', idx); }catch(e){}
+  showHoroscopeUI();
+  generateHoroscope(idx);
+}
+
+function clearSavedRashi(){
+  savedRashi = null;
+  try{ localStorage.removeItem('gp_moon_sign'); }catch(e){}
+  showHoroscopeUI();
+}
+
+function showHoroscopeUI(){
+  const selectorWrap = document.getElementById('rashi-selector-wrap');
+  const savedBar = document.getElementById('rashi-saved-bar');
+  const savedName = document.getElementById('saved-rashi-name');
+  if(savedRashi !== null){
+    const rd = RASHI_DATA[savedRashi];
+    selectorWrap.style.display = 'none';
+    savedBar.style.display = 'flex';
+    savedName.textContent = rd.sym + ' ' + rd.name + ' (' + rd.eng + ')';
+  } else {
+    selectorWrap.style.display = 'block';
+    savedBar.style.display = 'none';
+    document.getElementById('horoscope-output').innerHTML = '';
+  }
+}
+
+async function generateHoroscope(rashiIdx, forceRefresh=false){
+  const rd = RASHI_DATA[rashiIdx];
+  const dpick = document.getElementById('dpick');
+  const dateStr = dpick.value || new Date().toISOString().split('T')[0];
+  const cacheKey = rashiIdx + '_' + dateStr;
+
+  // Use cache unless force refresh
+  if(!forceRefresh && horoscopeCache[cacheKey]){
+    renderHoroscope(horoscopeCache[cacheKey], rd, dateStr);
+    return;
+  }
+
+  // Show loading
+  document.getElementById('horoscope-output').innerHTML = `
+    <div class="horoscope-loading">
+      <div class="hl-icon">🔮</div>
+      <p>Consulting the stars for ${rd.sym} ${rd.name}…<br><span style="font-size:12px;opacity:.7">Powered by Claude AI using today's Panchang data</span></p>
+    </div>`;
+
+  // Get current panchang data
+  const [yr,mo,dy] = dateStr.split('-').map(Number);
+  const date = new Date(yr, mo-1, dy);
+  const p = computeP(date);
+  const ss = sunriseSunset(date);
+
+  // Build panchang context for Claude
+  const panchangContext = `
+Today's Vedic Panchang (${dateStr}):
+- Tithi: ${p.tithi.name} (${p.tithi.paksha}, ${Math.round(p.tithi.pct)}% elapsed)
+- Nakshatra: ${p.nakshatra.name} (lord: ${NAK_LORDS_EN[p.nakshatra.num]})
+- Yoga: ${p.yoga.name} (${p.yoga.nature})
+- Vara (weekday): ${p.vara.name} (lord: ${p.vara.lord})
+- Masa: ${p.masa.name}
+- Moon in rashi: ${RASHIS_EN[p.planets.Moon.rashi]}
+- Sun in rashi: ${RASHIS_EN[p.planets.Sun.rashi]}
+- Jupiter in: ${RASHIS_EN[p.planets.Jupiter.rashi]}
+- Saturn in: ${RASHIS_EN[p.planets.Saturn.rashi]}
+- Venus in: ${RASHIS_EN[p.planets.Venus.rashi]}
+- Mars in: ${RASHIS_EN[p.planets.Mars.rashi]}
+- Mercury in: ${RASHIS_EN[p.planets.Mercury.rashi]}
+- Rahu in: ${RASHIS_EN[p.planets.Rahu.rashi]}
+- Sunrise: ${ss.rise}, Sunset: ${ss.set}
+
+Moon sign being read for: ${rd.eng} (${rd.name}) — Rashi lord: ${rd.lord}, Element: ${rd.element}`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: `You are a knowledgeable Vedic astrologer writing daily horoscopes based on actual Panchang data. 
+Write warm, meaningful, practical guidance — not generic vague statements. 
+Reference the actual planetary positions and panchang elements provided.
+Always respond with ONLY valid JSON, no markdown, no preamble.
+Format: {
+  "overview": "2-3 sentence daily overview (60-80 words)",
+  "love": "1-2 sentences about relationships/love",
+  "career": "1-2 sentences about work/career/finances", 
+  "health": "1-2 sentences about health/wellness",
+  "spiritual": "1-2 sentences about spiritual guidance for the day",
+  "luckyColor": "one color",
+  "luckyNumber": "a number 1-9",
+  "luckyTime": "a time window like 10:00 AM - 11:30 AM",
+  "energy": "one word: High / Medium / Low",
+  "tip": "one practical tip for the day (under 15 words)"
+}`,
+        messages: [{
+          role: 'user',
+          content: `Write today's Vedic horoscope for ${rd.eng} (${rd.name}) moon sign.\n\n${panchangContext}`
+        }]
+      })
+    });
+
+    const data = await response.json();
+    const text = data.content?.[0]?.text || '';
+
+    let parsed;
+    try {
+      const clean = text.replace(/```json|```/g, '').trim();
+      parsed = JSON.parse(clean);
+    } catch(e) {
+      throw new Error('Could not parse horoscope response');
+    }
+
+    // Cache it
+    horoscopeCache[cacheKey] = parsed;
+    renderHoroscope(parsed, rd, dateStr);
+
+  } catch(err) {
+    document.getElementById('horoscope-output').innerHTML = `
+      <div class="horoscope-error">
+        <div style="font-size:36px;margin-bottom:12px">🌙</div>
+        <p style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px">Could not generate horoscope</p>
+        <p style="font-size:13px;margin-bottom:20px">This feature requires an internet connection and the Anthropic API.</p>
+        <button class="regen-btn" onclick="generateHoroscope(${rashiIdx},true)" style="margin:0 auto">↺ Try Again</button>
+      </div>`;
+  }
+}
+
+function renderHoroscope(h, rd, dateStr){
+  const date = new Date(dateStr+'T00:00:00');
+  const formattedDate = date.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  const energyColor = h.energy==='High'?'#166534':h.energy==='Medium'?'#92400E':'#991B1B';
+  const energyBg = h.energy==='High'?'#EDFBF2':h.energy==='Medium'?var_gold_pale:'#FEF2F2';
+
+  document.getElementById('horoscope-output').innerHTML = `
+    <div class="horoscope-card">
+      <div class="horoscope-header">
+        <div class="rashi-big">${rd.sym}</div>
+        <div class="rashi-title">${rd.name} · ${rd.eng}</div>
+        <div class="rashi-sub">Moon Sign · Rashi Lord: ${rd.lord} · ${rd.element} sign</div>
+        <div class="rashi-date">📅 ${formattedDate}</div>
+      </div>
+      <div class="horoscope-body">
+        <p class="horoscope-text">${h.overview}</p>
+
+        <div class="horoscope-sections">
+          <div class="hs-card">
+            <div class="hs-icon">💕</div>
+            <div class="hs-label">Love & Relationships</div>
+            <div class="hs-value" style="font-size:13px;font-weight:400;color:var(--text2);line-height:1.6">${h.love}</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-icon">💼</div>
+            <div class="hs-label">Career & Finance</div>
+            <div class="hs-value" style="font-size:13px;font-weight:400;color:var(--text2);line-height:1.6">${h.career}</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-icon">🌿</div>
+            <div class="hs-label">Health & Wellness</div>
+            <div class="hs-value" style="font-size:13px;font-weight:400;color:var(--text2);line-height:1.6">${h.health}</div>
+          </div>
+          <div class="hs-card">
+            <div class="hs-icon">🕉</div>
+            <div class="hs-label">Spiritual Guidance</div>
+            <div class="hs-value" style="font-size:13px;font-weight:400;color:var(--text2);line-height:1.6">${h.spiritual}</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:20px">
+          <div class="hs-card" style="text-align:center">
+            <div class="hs-label">Today's Energy</div>
+            <div style="font-size:18px;font-weight:700;color:${energyColor};margin-top:4px">${h.energy}</div>
+          </div>
+          <div class="hs-card" style="text-align:center">
+            <div class="hs-label">Lucky Color</div>
+            <div style="font-size:15px;font-weight:700;color:var(--text);margin-top:4px">🎨 ${h.luckyColor}</div>
+          </div>
+          <div class="hs-card" style="text-align:center">
+            <div class="hs-label">Lucky Number</div>
+            <div style="font-size:24px;font-weight:800;color:var(--crimson);margin-top:2px">${h.luckyNumber}</div>
+          </div>
+          <div class="hs-card" style="text-align:center">
+            <div class="hs-label">Best Time</div>
+            <div style="font-size:13px;font-weight:600;color:var(--text);margin-top:4px">⏰ ${h.luckyTime}</div>
+          </div>
+        </div>
+
+        <div style="padding:14px 16px;background:var(--gold-pale);border-radius:var(--radius-sm);border-left:4px solid var(--gold);margin-bottom:20px">
+          <div style="font-size:11px;font-weight:700;color:#92400E;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">💡 Today's Tip</div>
+          <div style="font-size:14px;color:#5C3D2E;font-weight:500">${h.tip}</div>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div style="font-size:11px;color:var(--muted)">✨ Generated by Claude AI using today's actual Panchang data</div>
+          <button class="regen-btn" onclick="generateHoroscope(${rd.idx},true)">↺ Refresh Reading</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// small helper to avoid template literal issues
+const var_gold_pale = '#FDF3D0';
+
+// ── EVENT LISTENERS ──
+document.getElementById('dpick').addEventListener('change',()=>{calMonth=null;renderAll();if(savedRashi!==null)generateHoroscope(savedRashi,true);});
+document.getElementById('tzpick').addEventListener('change',()=>{calMonth=null;updateCountryFromTimezone();renderAll();});
+document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('active'));tab.classList.add('active');document.getElementById('pane-'+tab.dataset.tab).classList.add('active');if(tab.dataset.tab==='horoscope'&&savedRashi!==null&&!document.getElementById('horoscope-output').innerHTML){generateHoroscope(savedRashi);}});});
+document.getElementById('prev-month').addEventListener('click',()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar(calYear,calMonth);});
+document.getElementById('next-month').addEventListener('click',()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar(calYear,calMonth);});
+
+renderAll();
+</script>
+</body>
+</html>
