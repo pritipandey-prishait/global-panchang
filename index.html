@@ -200,17 +200,137 @@ body{font-family:'Inter',sans-serif;background:#F4F7FB;color:#0F172A;font-size:1
 .lucky-chip{padding:7px 16px;border-radius:var(--radius-pill);background:var(--bg2);border:1px solid var(--border-soft);font-size:15px;font-weight:500;color:var(--text2)}
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:600px){
-  body{font-size:17px}
-  .cg-grid{grid-template-columns:repeat(2,1fr)}
-  .content{padding:16px 14px}
-  .logo-text .name{font-size:20px}
-  .lang-btn{padding:5px 10px;font-size:12px}
-  .site-header{padding:0 16px;height:68px}
-  .controls-bar{padding:12px 16px}
-  .tabs{padding:0 16px}
-  .rashi-selector{grid-template-columns:repeat(4,1fr)}
-  .horoscope-sections{grid-template-columns:1fr}
+/* ══ MOBILE OVERHAUL ══ */
+@media(max-width:680px){
+  body{font-size:16px}
+
+  /* HEADER — stack into 2 compact rows */
+  .site-header{height:auto;flex-direction:column;align-items:stretch;gap:0;padding:10px 14px 10px}
+  .logo{justify-content:flex-start;gap:10px;margin-bottom:8px}
+  .logo-icon{font-size:26px}
+  .logo-text .name{font-size:19px}
+  .logo-text .tagline{font-size:10px}
+  .site-header > div:last-child{display:flex;align-items:center;gap:8px;justify-content:space-between}
+  .region-badge{font-size:10px;padding:4px 10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px}
+  .lang-btns{gap:4px}
+  .lang-btn{padding:6px 9px;font-size:12px;border-width:1px}
+
+  /* CONTROLS — full width stack */
+  .controls-bar{padding:10px 14px;gap:8px}
+  .controls-bar input{flex:1;min-width:0;font-size:14px;padding:9px 10px}
+  .controls-bar select{flex:1.4;min-width:0;font-size:14px;padding:9px 10px;max-width:55%}
+  #display-date{width:100%;margin-left:0;font-size:12px;text-align:center;order:3}
+
+  /* TABS — clean horizontal scroll */
+  .tabs{padding:0 8px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{padding:13px 12px;font-size:13.5px;flex-shrink:0}
+
+  /* CONTENT */
+  .content{padding:14px 12px}
+
+  /* MINI CARDS — fixed 2 columns, no overflow */
+  .card-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:16px}
+  .mini-card{padding:13px 14px;min-width:0}
+  .mini-card .lbl{font-size:10px}
+  .mini-card .val{font-size:16px;word-break:break-word}
+  .mini-card .sub{font-size:11px}
+
+  /* SECTIONS */
+  .sec{margin-bottom:14px;border-radius:14px}
+  .sec-h{padding:11px 14px;font-size:11px}
+  .sec-b{padding:14px}
+  .ptbl{font-size:14px}
+  .ptbl td{padding:9px 0}
+
+  /* Side-by-side Sun&Moon / Inauspicious → stack vertically */
+  #pane-main > div[style*='grid-template-columns:1fr 1fr']{grid-template-columns:1fr!important}
+
+  /* PLANETS */
+  .pchip{padding:8px 11px}
+  .psym{font-size:17px;width:20px}
+  .pn{font-size:12px}.pr{font-size:11px}
+
+  /* CHOGHADIYA */
+  .cg-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .cg-cell{padding:10px 6px}
+  .cg-cell .cn{font-size:13px}.cg-cell .ct{font-size:11px}
+
+  /* MUHURTA */
+  .muhurta-grid{grid-template-columns:1fr;gap:10px}
+
+  /* CALENDAR — roomy squares */
+  .cal-nav button{padding:8px 16px;font-size:16px}
+  .cal-nav .ml{font-size:16px}
+  .cal-grid{gap:2px}
+  .cal-head{font-size:10px;padding:4px 0}
+  .cal-day{min-height:58px;padding:4px 2px;border-radius:8px}
+  .cal-day .dn{font-size:13px}
+  .cal-day .dt{font-size:8px;letter-spacing:-.02em}
+  .fdot{font-size:7px;padding:1px 3px;margin-top:1px}
+
+  /* FILTERS */
+  .filter-panel{padding:14px;border-radius:14px}
+  .filter-chip{padding:8px 12px;font-size:13px}
+  .country-chip{padding:6px 10px;font-size:12px}
+  .filter-action-btn{padding:8px 13px;font-size:13px;flex:1}
+
+  /* NAKSHATRA */
+  .nak-grid{grid-template-columns:1fr;gap:10px}
+
+  /* ASHTAKAVARGA table scrolls — keep min-width */
+  .ai-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+
+  /* TODAY BANNER */
+  .today-banner{padding:16px 18px;border-radius:16px;margin-bottom:16px}
+  .today-banner::before{font-size:44px;right:12px}
+  .today-banner .tb-lbl{font-size:11px;margin-bottom:8px}
+  .today-banner .tb-badges{gap:7px}
+  .today-banner .tb-badges .badge{font-size:12.5px;padding:6px 13px}
+
+  /* HOROSCOPE */
+  .rashi-selector{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .rashi-btn{padding:12px 6px}
+  .rashi-btn .rsym{font-size:22px}
+  .rashi-btn .rname{font-size:11px}
+  .rashi-btn .reng{font-size:10px}
+  .horoscope-header{padding:20px 18px}
+  .horoscope-header .rashi-big{font-size:42px}
+  .horoscope-header .rashi-title{font-size:23px}
+  .horoscope-header .rashi-sub{font-size:13px}
+  .horoscope-body{padding:18px 16px}
+  .horoscope-text{font-size:15.5px;line-height:1.8;margin-bottom:18px}
+  .horoscope-sections{grid-template-columns:1fr;gap:10px}
+  .hs-card{padding:13px 15px}
+
+  /* PERMISSION POPUP */
+  .permission-box{padding:24px 18px;max-height:88vh;overflow-y:auto}
+  .permission-box h3{font-size:20px}
+  .permission-box p{font-size:13px;margin-bottom:16px}
+  .permission-item{padding:11px 12px;gap:10px}
+  .permission-item .pi-icon{font-size:20px}
+  .permission-item .pi-text .pi-title{font-size:14px}
+  .permission-item .pi-text .pi-desc{font-size:11.5px}
+  .perm-btn{padding:12px;font-size:14px}
+
+  /* SETTINGS rows */
+  .notif-row .nr-label{font-size:14px}
+  .notif-row .nr-desc{font-size:12px}
+
+  /* FOOTER */
+  .site-footer{padding:28px 16px}
+  .site-footer .footer-logo{font-size:20px}
+
+  /* LOCATION BAR */
+  .location-bar{padding:8px 14px;font-size:12px}
+}
+
+/* very small phones */
+@media(max-width:380px){
+  .lang-btn{padding:5px 7px;font-size:11px}
+  .cal-day{min-height:52px}
+  .cal-day .dt{display:none}
+  .rashi-selector{grid-template-columns:repeat(3,minmax(0,1fr))}
 }
 </style>
 </head>
